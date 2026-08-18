@@ -11,7 +11,7 @@ export const contact = {
   instagram: "https://instagram.com/",
   linkedin: "https://linkedin.com/",
   youtube: "https://youtube.com/",
-  whatsapp: "https://wa.me/910000000000",
+  whatsapp: "https://wa.me/917010146105",
 };
 
 export const stats = [

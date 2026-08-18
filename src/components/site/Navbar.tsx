@@ -21,18 +21,18 @@ export function Navbar() {
 
   return (
     <header
-      className={`fixed inset-x-0 top-0 z-50 transition-all duration-500 ${
+      className={`fixed inset-x-0 top-0 z-50 transition-all duration-500 bg-deep border-b ${
         scrolled
-          ? "border-b border-border/70 bg-background/85 backdrop-blur-md"
-          : "border-b border-transparent bg-transparent"
+          ? "border-deep-foreground/10 shadow-lg"
+          : "border-transparent"
       }`}
     >
       <div className="mx-auto flex h-18 max-w-[1400px] items-center justify-between px-5 py-4 md:px-10">
         <a href="#top" className="group leading-tight">
-          <span className="font-display text-xl tracking-tight text-foreground md:text-2xl">
+          <span className="font-display text-xl tracking-wider text-gold md:text-2xl font-medium">
             SHANMU
           </span>
-          <span className="mt-1 hidden label-xs text-muted-foreground md:block">
+          <span className="mt-0.5 hidden label-xs text-gold/70 md:block tracking-[0.25em]">
             Digital Creator · Entrepreneur
           </span>
         </a>
@@ -42,14 +42,14 @@ export function Navbar() {
             <a
               key={item.href}
               href={item.href}
-              className="label-xs text-foreground/80 transition-colors hover:text-gold"
+              className="label-xs text-cream/85 transition-colors hover:text-gold"
             >
               {item.label}
             </a>
           ))}
           <a
             href="#contact"
-            className="label-xs bg-primary px-6 py-3.5 text-primary-foreground transition-colors hover:bg-deep"
+            className="label-xs border border-gold px-6 py-2.5 text-gold tracking-widest transition-colors hover:bg-gold hover:text-ink"
           >
             Let's Work Together
           </a>
@@ -63,10 +63,10 @@ export function Navbar() {
           className="flex h-10 w-10 flex-col items-center justify-center gap-1.5 lg:hidden"
         >
           <span
-            className={`h-px w-6 bg-foreground transition-transform duration-300 ${open ? "translate-y-[3px] rotate-45" : ""}`}
+            className={`h-px w-6 bg-cream transition-transform duration-300 ${open ? "translate-y-[3px] rotate-45" : ""}`}
           />
           <span
-            className={`h-px w-6 bg-foreground transition-transform duration-300 ${open ? "-translate-y-[3px] -rotate-45" : ""}`}
+            className={`h-px w-6 bg-cream transition-transform duration-300 ${open ? "-translate-y-[3px] -rotate-45" : ""}`}
           />
         </button>
       </div>

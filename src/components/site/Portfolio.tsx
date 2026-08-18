@@ -58,18 +58,18 @@ export function Portfolio() {
       <div className="mt-16 grid gap-6 lg:grid-cols-12 lg:gap-8">
         {projects.map((p, i) => (
           <Reveal key={p.title} className={p.span} delay={i * 80}>
-            <article className="group cursor-pointer">
-              <div className={`overflow-hidden rounded-sm bg-secondary ${p.ratio}`}>
+            <article className="group cursor-pointer transition-transform duration-500 hover:-translate-y-1">
+              <div className={`overflow-hidden rounded-xl shadow-md bg-secondary ${p.ratio} transition-all duration-500 group-hover:shadow-xl`}>
                 <img
                   src={p.image}
                   alt={`${p.title} — placeholder project image`}
                   loading="lazy"
-                  className="h-full w-full object-cover transition-transform duration-[400ms] ease-out group-hover:scale-[1.03]"
+                  className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-108"
                 />
               </div>
               <div className="mt-5 flex items-start justify-between gap-6 border-t border-border pt-4">
                 <div>
-                  <h3 className="font-display text-2xl text-foreground transition-transform duration-[400ms] group-hover:-translate-y-0.5 md:text-3xl">
+                  <h3 className="font-display text-2xl font-semibold text-foreground transition-colors duration-300 group-hover:text-gold md:text-3xl">
                     {p.title}
                   </h3>
                   <p className="mt-2 label-xs text-muted-foreground">
@@ -79,7 +79,7 @@ export function Portfolio() {
                 </div>
                 <span
                   aria-hidden="true"
-                  className="text-xl text-gold opacity-0 transition-all duration-[400ms] group-hover:translate-x-1 group-hover:opacity-100"
+                  className="flex h-9 w-9 items-center justify-center rounded-full border border-gold/30 text-xl text-gold opacity-0 transition-all duration-300 group-hover:translate-x-1 group-hover:opacity-100 group-hover:bg-gold/10"
                 >
                   →
                 </span>

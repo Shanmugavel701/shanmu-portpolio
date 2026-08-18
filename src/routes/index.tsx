@@ -16,7 +16,7 @@ import { Statement } from "@/components/site/Statement";
 import { FinalCTA } from "@/components/site/FinalCTA";
 import { Contact } from "@/components/site/Contact";
 import { Footer } from "@/components/site/Footer";
-import { WhatsAppButton } from "@/components/site/WhatsAppButton";
+import { AIAssistant } from "@/components/site/AIAssistant";
 
 const title = "Shanmu | Digital Creator, Developer & Entrepreneur";
 const description =
@@ -71,7 +71,7 @@ function Index() {
         <Contact />
       </main>
       <Footer />
-      <WhatsAppButton />
+      <AIAssistant />
     </div>
   );
 }
