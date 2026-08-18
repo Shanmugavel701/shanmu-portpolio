@@ -1,7 +1,17 @@
 import { stats } from "@/data/site";
 import { useCountUp, useInView } from "@/hooks/use-reveal";
 
-function Counter({ value, prefix = "", suffix = "", active }: { value: number; prefix?: string; suffix?: string; active: boolean }) {
+function Counter({
+  value,
+  prefix = "",
+  suffix = "",
+  active,
+}: {
+  value: number;
+  prefix?: string | undefined;
+  suffix?: string | undefined;
+  active: boolean;
+}) {
   const n = useCountUp(value, active);
   return (
     <span>
