@@ -79,17 +79,17 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { name: "viewport", content: "width=device-width, initial-scale=1" },
 
       // ── SEO Core ──────────────────────────────────────────────────
-      { title: "Shanmu | Digital Creator, Developer & Entrepreneur — Tamil Nadu, India" },
+      { title: "Shanmu | Website Developer & Digital Growth Specialist in India" },
       {
         name: "description",
         content:
-          "Shanmugavel (Shanmu) is a Tamil Nadu-based digital creator, full-stack developer, graphic designer and entrepreneur. 5+ years · 20+ clients · ₹2Cr+ revenue generated. Services: Website Development, Graphic Design, Video Editing, Social Media & Digital Marketing.",
+          "Shanmu is a website developer and digital growth specialist based in Coimbatore, Tamil Nadu, India who builds custom WordPress, business, and e-commerce websites for startups, small businesses, and growing brands across India, UAE, USA, and UK.",
       },
       { name: "author", content: "Shanmugavel" },
       {
         name: "keywords",
         content:
-          "Shanmugavel, Shanmu, digital creator Tamil Nadu, web developer India, graphic designer, video editor, social media manager, digital marketing, website development, brand identity, Shadivi, VelzX, freelancer India",
+          "website developer in Coimbatore, web developer in Coimbatore, website development company Coimbatore, WordPress developer Coimbatore, WordPress development Coimbatore, website development for small business, business website development, ecommerce website development, website redesign services, professional website development, website developer Tamil Nadu, website developer Chennai, website developer Bangalore, website developer India, website developer Dubai, website developer UAE, website developer USA, website developer UK, Shanmugavel, Shanmu, VelzX, Shadivi",
       },
       { name: "robots", content: "index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" },
       { name: "theme-color", content: "#0a0a0a" },
@@ -97,39 +97,42 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { name: "revisit-after", content: "7 days" },
       { name: "language", content: "English" },
       { name: "geo.region", content: "IN-TN" },
-      { name: "geo.placename", content: "Tamil Nadu, India" },
+      { name: "geo.placename", content: "Coimbatore, Tamil Nadu, India" },
 
       // ── Open Graph (SEO + AEO) ─────────────────────────────────────
       { property: "og:site_name", content: "Shanmu" },
       { property: "og:type", content: "website" },
       { property: "og:locale", content: "en_IN" },
-      { property: "og:title", content: "Shanmu | Digital Creator, Developer & Entrepreneur" },
+      { property: "og:title", content: "Shanmu | Website Developer & Digital Growth Specialist in India" },
       {
         property: "og:description",
         content:
-          "Shanmugavel helps businesses build better websites, brands, and digital growth systems. 5+ years · 20+ clients · ₹2Cr+ revenue generated.",
+          "Freelance Website & WordPress Developer in Coimbatore, India. Custom business websites, WooCommerce stores, speed optimization & digital growth systems.",
       },
       { property: "og:url", content: "https://shanmugavel.vercel.app/" },
       { property: "og:image", content: "https://shanmugavel.vercel.app/og-image.jpg" },
       { property: "og:image:width", content: "1200" },
       { property: "og:image:height", content: "630" },
-      { property: "og:image:alt", content: "Shanmugavel — Digital Creator, Developer & Entrepreneur" },
+      { property: "og:image:alt", content: "Shanmu — Website Developer & Digital Growth Specialist" },
 
       // ── Twitter / X Card ──────────────────────────────────────────
       { name: "twitter:card", content: "summary_large_image" },
       { name: "twitter:site", content: "@shanmu_og" },
       { name: "twitter:creator", content: "@shanmu_og" },
-      { name: "twitter:title", content: "Shanmu | Digital Creator, Developer & Entrepreneur" },
+      { name: "twitter:title", content: "Shanmu | Website Developer & Digital Growth Specialist in India" },
       {
         name: "twitter:description",
-        content: "Websites · Branding · Video · Social Media · Digital Marketing. Based in Tamil Nadu, India.",
+        content: "Custom WordPress, Business Websites, E-Commerce & Lead Generation. Based in Coimbatore, India · Working Globally.",
       },
       { name: "twitter:image", content: "https://shanmugavel.vercel.app/og-image.jpg" },
-      { name: "twitter:image:alt", content: "Shanmugavel — Digital Creator & Developer" },
+      { name: "twitter:image:alt", content: "Shanmu — Website Developer & Digital Growth Specialist" },
 
       // ── GEO — AI / Generative Engine signals ─────────────────────
-      // Signals to AI models (ChatGPT, Gemini, Claude, Perplexity) for accurate entity resolution
-      { name: "ai:description", content: "Shanmugavel is a Tamil Nadu-based digital professional offering website development, graphic design, video editing, social media management and digital marketing services to businesses across India." },
+      {
+        name: "ai:description",
+        content:
+          "Shanmu is a website developer and digital growth specialist based in Coimbatore, Tamil Nadu, India who builds WordPress, business, and e-commerce websites for startups, small businesses, and growing brands, while also providing branding, video editing, social media management, and digital marketing services.",
+      },
     ],
     links: [
       { rel: "stylesheet", href: appCss },

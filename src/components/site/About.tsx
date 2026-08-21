@@ -2,13 +2,14 @@ import aboutPortrait from "@/assets/Shanmu Entreprenuer.png";
 import { Reveal, SectionLabel } from "./Reveal";
 
 const disciplines = [
-  "Website Development",
-  "Branding",
-  "Graphic Design",
-  "Video",
-  "Social Media",
-  "Digital Marketing",
-  "Product Building",
+  "Custom WordPress Development",
+  "Business & Corporate Websites",
+  "WooCommerce & E-Commerce",
+  "Website Speed & Core Web Vitals",
+  "Local & Technical SEO",
+  "Brand Identity & UI/UX Design",
+  "Short-Form Video Production",
+  "Lead Generation Systems",
 ];
 
 export function About() {
@@ -19,7 +20,7 @@ export function About() {
           <div className="overflow-hidden rounded-2xl shadow-xl transition-all duration-700 hover:shadow-2xl">
             <img
               src={aboutPortrait}
-              alt="Shanmu - Digital Creator, Developer & Entrepreneur"
+              alt="Shanmugavel - Website Developer & Digital Entrepreneur"
               width={912}
               height={1104}
               loading="lazy"
@@ -27,25 +28,22 @@ export function About() {
             />
           </div>
           <p className="mt-6 font-display text-2xl italic text-primary font-medium transition-transform duration-300 group-hover:translate-x-1">
-            Creative + Technology + Business
+            Engineering High-Performance Digital Assets
           </p>
         </Reveal>
 
         <div>
           <Reveal>
-            <SectionLabel>About Me</SectionLabel>
+            <SectionLabel>About Shanmu</SectionLabel>
             <h2 className="mt-7 font-display text-[clamp(2.2rem,5vw,4rem)] font-semibold leading-[1.05] text-foreground">
-              More Than Just
+              Website Developer &amp;
               <br />
-              A <em className="text-gold font-medium italic">Digital Creator.</em>
+              <em className="text-gold font-medium italic">Digital Growth Specialist.</em>
             </h2>
           </Reveal>
           <Reveal delay={100}>
             <p className="mt-8 max-w-xl text-[0.95rem] leading-relaxed text-muted-foreground">
-              I'm a digital creator, developer, designer and entrepreneur focused on building things
-              that create real value. Over the last five years I've moved between building websites,
-              shaping brand identities, editing video, running social media and driving digital
-              marketing — and eventually building my own products.
+              Based in Coimbatore, Tamil Nadu, I help startups, founders, and growing businesses across India and internationally build web infrastructure that turns casual visitors into high-ticket clients. Over the past 5+ years, I've developed custom WordPress websites, engineered e-commerce sales systems, and executed data-driven marketing funnels that have generated over ₹2 Crore in client revenue.
             </p>
           </Reveal>
           <Reveal delay={150}>
@@ -63,11 +61,11 @@ export function About() {
           </Reveal>
           <Reveal delay={200}>
             <blockquote className="mt-12 border-l-2 border-gold pl-6 font-display text-2xl leading-snug text-foreground md:text-3xl transition-transform duration-300 hover:translate-x-1">
-              Design gets attention.
+              Code ensures performance.
               <br />
-              Technology creates experience.
+              Design builds authority.
               <br />
-              <em className="text-gold font-medium italic">Marketing creates growth.</em>
+              <em className="text-gold font-medium italic">SEO &amp; Strategy drive revenue.</em>
             </blockquote>
           </Reveal>
         </div>

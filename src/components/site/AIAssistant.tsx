@@ -29,53 +29,59 @@ const KNOWLEDGE_BASE: { keywords: string[]; response: string; quickReplies?: str
   {
     keywords: ["hi", "hello", "hey", "start", "help", "who"],
     response:
-      "Hello! 👋 I'm Shanmu's AI Assistant. I help business owners, creators, and brands explore our services, get estimates, and start projects. How can I assist you today?",
+      "Hello! 👋 I'm Shanmu's AI Assistant. Shanmu is a Website Developer & Digital Growth Specialist based in Coimbatore, Tamil Nadu, India. How can I help you scale your business today?",
     quickReplies: [
-      "🚀 How can Shanmu help me?",
-      "💻 Website Development",
-      "📈 Digital Marketing & Growth",
-      "💰 Get Project Estimate",
+      "💻 Website & WordPress Development",
+      "🛍️ E-Commerce & Landing Pages",
+      "📈 SEO & Digital Marketing",
+      "💰 Get a Project Quote",
     ],
   },
   {
     keywords: ["services", "what you do", "offer", "help", "work"],
     response:
-      "Shanmu provides end-to-end digital solutions including:\n\n• **Website Development**: High-converting, fast custom websites & web apps\n• **Graphic & Brand Design**: Distinctive visual identities\n• **Video Editing**: High-engagement short-form reels & branded videos\n• **Social Media Management**: Strategic growth systems\n• **Digital Marketing**: Lead generation & conversion campaigns\n• **SaaS Products**: Built tools like Shadivi & VelzX\n\nWhich service are you interested in?",
+      "Shanmu specializes in revenue-focused digital services:\n\n• **WordPress & Business Website Development**: Ultra-fast, SEO-optimized custom websites\n• **E-Commerce & Landing Pages**: High-converting WooCommerce stores & sales funnels\n• **Brand Identity & UI/UX**: Distinctive visual design in Figma\n• **Video Editing**: High-engagement short-form reels & promotional videos\n• **Digital Marketing & SEO**: Full-funnel search rankings and lead engines\n\nWhich service does your business need?",
     quickReplies: [
-      "💻 Website Development",
-      "🎨 Branding & Design",
-      "🎬 Video Editing",
-      "📈 Digital Marketing",
+      "💻 WordPress Development",
+      "🛍️ E-Commerce Store",
+      "🚀 SEO & Lead Generation",
+      "🎨 Brand & UI/UX Design",
     ],
   },
   {
-    keywords: ["website", "web", "development", "wordpress", "landing page", "ecommerce", "app"],
+    keywords: ["website", "web", "development", "wordpress", "landing page", "ecommerce", "woocommerce", "redesign", "speed"],
     response:
-      "We design and develop modern, ultra-fast websites focused on conversion, credibility, and smooth user experiences. We work with React, modern web stacks, WordPress, and custom e-commerce.\n\nWould you like to get an estimate for your website project?",
-    quickReplies: ["📋 Get a Website Quote", "🌟 View Portfolio Work", "💬 Talk to Shanmu on WhatsApp"],
+      "We build custom WordPress websites, WooCommerce stores, and high-converting landing pages engineered for sub-1.5s load times, Google Core Web Vitals, and maximum lead conversion. We don't use bloated pre-made templates.\n\nWould you like a custom quote or website audit?",
+    quickReplies: ["📋 Get a Website Quote", "🌟 View Case Studies", "💬 Chat on WhatsApp"],
   },
   {
-    keywords: ["price", "cost", "pricing", "rate", "quote", "estimate", "budget"],
+    keywords: ["price", "cost", "pricing", "rate", "quote", "estimate", "budget", "how much"],
     response:
-      "Every project is tailored to your business goals and scope. Projects typically start with a discovery brief to provide an accurate timeline and transparent quote. Let's capture your project details so Shanmu can provide an exact estimate!",
+      "Every project is tailored to your business scope and revenue goals. High-converting landing pages and business websites are competitively priced, while full e-commerce stores and custom platforms are quoted after understanding your exact requirements.\n\nLet's capture a few project details so Shanmu can provide an exact estimate!",
     quickReplies: ["📝 Share Project Details", "💬 Chat on WhatsApp", "📅 Book a Call"],
+  },
+  {
+    keywords: ["location", "coimbatore", "chennai", "bangalore", "tamil nadu", "india", "dubai", "uae", "usa", "uk", "where"],
+    response:
+      "Shanmu is based in **Coimbatore, Tamil Nadu, India**, and works with clients across Chennai, Bangalore, Mumbai, and internationally in the UAE (Dubai), the USA, the UK, and Singapore. All project delivery and communication is handled seamlessly online.",
+    quickReplies: ["💬 WhatsApp Now", "📝 Get a Project Quote", "📧 Send an Email"],
   },
   {
     keywords: ["marketing", "growth", "lead", "ads", "seo", "social"],
     response:
-      "Our digital marketing strategies have generated over ₹2Cr+ in revenue across 20+ clients. We focus on ROI-driven campaigns, conversion rate optimization, lead generation, and social media strategy.",
-    quickReplies: ["🚀 Scale My Business", "📞 Schedule Consultation", "💬 WhatsApp Chat"],
+      "Our SEO and digital marketing systems have generated over ₹2Cr+ in client revenue. We focus on ranking for high-intent commercial keywords, technical SEO, and building high-converting paid & organic funnels.",
+    quickReplies: ["🚀 Scale My Search Rankings", "📞 Schedule Consultation", "💬 WhatsApp Chat"],
   },
   {
     keywords: ["about", "experience", "who is", "shanmu", "background"],
     response:
-      "Shanmu is a digital creator, developer, and entrepreneur with 5+ years of hands-on experience building brands that look better, work smarter, and grow. He's also the creator of digital platforms like Shadivi and VelzX.",
-    quickReplies: ["🌟 View Selected Work", "📝 Start a Project", "💬 Contact Directly"],
+      "Shanmu (Shanmugavel) is a Website Developer & Digital Growth Specialist with 5+ years of experience, 20+ high-ticket clients, and ₹2Cr+ in revenue generated. He is also the founder of digital platforms Shadivi and VelzX.",
+    quickReplies: ["🌟 View Case Studies", "📝 Start a Project", "💬 Contact Directly"],
   },
   {
     keywords: ["contact", "email", "phone", "whatsapp", "call", "reach"],
     response:
-      "You can connect directly with Shanmu via WhatsApp, email, or by leaving your project brief right here. What works best for you?",
+      "You can connect directly with Shanmu via WhatsApp (+91 7010146105), email (shanmugavelnkt@gmail.com), or by leaving your project brief right here. What works best for you?",
     quickReplies: ["💬 WhatsApp Now", "📝 Leave Project Info", "📧 Send an Email"],
   },
 ];

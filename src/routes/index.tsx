@@ -12,20 +12,22 @@ import { Testimonials } from "@/components/site/Testimonials";
 import { Products } from "@/components/site/Products";
 import { Process } from "@/components/site/Process";
 import { WhyMe } from "@/components/site/WhyMe";
+import { FAQ } from "@/components/site/FAQ";
 import { Statement } from "@/components/site/Statement";
 import { FinalCTA } from "@/components/site/FinalCTA";
 import { Contact } from "@/components/site/Contact";
 import { Footer } from "@/components/site/Footer";
 import { AIAssistant } from "@/components/site/AIAssistant";
+import { faqs } from "@/data/site";
 
 const SITE_URL = "https://shanmugavel.vercel.app";
-const title = "Shanmu | Digital Creator, Developer & Entrepreneur — Tamil Nadu, India";
+const title = "Shanmu | Website Developer & Digital Growth Specialist in India";
 const description =
-  "Shanmugavel (Shanmu) is a Tamil Nadu-based digital creator, full-stack developer, graphic designer and entrepreneur. 5+ years · 20+ clients · ₹2Cr+ revenue generated. Services: Website Development, Graphic Design, Video Editing, Social Media & Digital Marketing.";
+  "Shanmu is a website developer and digital growth specialist based in Coimbatore, Tamil Nadu, India who builds custom WordPress, business, and e-commerce websites for startups, small businesses, and growing brands across India, UAE, USA, and UK.";
 
-// ── JSON-LD Schemas ────────────────────────────────────────────────────────
+// ── Rich JSON-LD Schemas (SEO, AEO & GEO) ──────────────────────────────────
 
-/** SEO + GEO: Person entity — lets AI/search engines identify Shanmugavel as a person */
+/** Person Entity Schema for AI & Knowledge Graph */
 const personSchema = {
   "@context": "https://schema.org",
   "@type": "Person",
@@ -35,21 +37,25 @@ const personSchema = {
   url: SITE_URL,
   email: "shanmugavelnkt@gmail.com",
   telephone: "+917010146105",
-  jobTitle: "Digital Creator, Developer & Entrepreneur",
+  jobTitle: "Website Developer & Digital Growth Specialist",
   description,
+  image: `${SITE_URL}/assets/Shanmu.jpeg`,
   knowsAbout: [
     "Website Development",
-    "Graphic Design",
-    "Video Editing",
-    "Social Media Management",
-    "Digital Marketing",
-    "Brand Identity",
-    "WordPress",
-    "React",
-    "UI/UX Design",
+    "WordPress Development",
+    "WooCommerce Development",
+    "E-Commerce Website Development",
+    "Website Redesign Services",
+    "Landing Page Development",
+    "Technical SEO & Core Web Vitals",
+    "Conversion Rate Optimization (CRO)",
+    "Graphic Design & Brand Identity",
+    "Short-Form Video Editing",
+    "Digital Marketing & Lead Generation",
   ],
   address: {
     "@type": "PostalAddress",
+    addressLocality: "Coimbatore",
     addressRegion: "Tamil Nadu",
     addressCountry: "IN",
   },
@@ -64,145 +70,154 @@ const personSchema = {
   ],
 };
 
-/** AEO + GEO: ProfessionalService — helps answer "what does Shanmu do?" */
+/** ProfessionalService Schema for Commercial Search Intent */
 const serviceSchema = {
   "@context": "https://schema.org",
   "@type": "ProfessionalService",
   "@id": `${SITE_URL}/#business`,
-  name: "Shanmu Digital Services",
+  name: "Shanmu — Website Development & Digital Growth",
   url: SITE_URL,
+  logo: `${SITE_URL}/favicon.ico`,
+  image: `${SITE_URL}/assets/Shanmu.jpeg`,
   description:
-    "Digital services by Shanmugavel: Website Development, Graphic Design, Video Editing, Social Media Management and Digital Marketing for businesses across India.",
+    "Professional website development, custom WordPress solutions, e-commerce stores, brand design, and digital marketing services for businesses in Coimbatore, Chennai, Bangalore, Tamil Nadu, India, UAE, USA, and UK.",
   founder: { "@id": `${SITE_URL}/#person` },
-  areaServed: { "@type": "Country", name: "India" },
+  priceRange: "₹₹ - ₹₹₹",
+  telephone: "+917010146105",
+  email: "shanmugavelnkt@gmail.com",
   address: {
     "@type": "PostalAddress",
+    addressLocality: "Coimbatore",
     addressRegion: "Tamil Nadu",
     addressCountry: "IN",
   },
-  contactPoint: {
-    "@type": "ContactPoint",
-    email: "shanmugavelnkt@gmail.com",
-    telephone: "+917010146105",
-    contactType: "customer service",
-    availableLanguage: ["English", "Tamil"],
+  geo: {
+    "@type": "GeoCoordinates",
+    latitude: 11.0168,
+    longitude: 76.9558,
   },
+  areaServed: [
+    { "@type": "City", name: "Coimbatore" },
+    { "@type": "City", name: "Chennai" },
+    { "@type": "City", name: "Bangalore" },
+    { "@type": "AdministrativeArea", name: "Tamil Nadu" },
+    { "@type": "Country", name: "India" },
+    { "@type": "Country", name: "United Arab Emirates" },
+    { "@type": "Country", name: "United States" },
+    { "@type": "Country", name: "United Kingdom" },
+  ],
   hasOfferCatalog: {
     "@type": "OfferCatalog",
-    name: "Digital Services",
+    name: "Web Development & Growth Services",
     itemListElement: [
       {
         "@type": "Offer",
         itemOffered: {
           "@type": "Service",
-          name: "Website Development",
+          name: "WordPress & Business Website Development",
           description:
-            "High-performing websites designed to make your business look credible, convert visitors and grow online. Includes WordPress, Landing Pages, Business Websites, E-commerce and Web Design.",
+            "Custom WordPress development, corporate business websites, website redesign, speed optimization, and SEO-friendly web architecture.",
         },
       },
       {
         "@type": "Offer",
         itemOffered: {
           "@type": "Service",
-          name: "Graphic Design",
+          name: "E-Commerce & High-Converting Landing Pages",
           description:
-            "Visual identities and creative assets: Brand Identity, Social Media Creatives, Posters, Presentations and Marketing Materials.",
+            "WooCommerce online stores, D2C e-commerce websites, checkout optimization, sales funnels, and CRM integration.",
         },
       },
       {
         "@type": "Offer",
         itemOffered: {
           "@type": "Service",
-          name: "Video Editing",
+          name: "Brand Identity & UI/UX Design",
           description:
-            "Short-form and branded video content: Reels, Promotional Videos, Brand Videos, Social Media Videos and Motion Graphics.",
+            "Visual identity systems, Figma UI/UX prototyping, marketing collateral, and brand style guides.",
         },
       },
       {
         "@type": "Offer",
         itemOffered: {
           "@type": "Service",
-          name: "Social Media Management",
+          name: "Video Editing & Content Systems",
           description:
-            "Content Planning, Creative Design, Reels, Publishing and Analytics to turn social media into a real business asset.",
+            "High-engagement short-form reels, brand videos, motion graphics, and founder-led content strategies.",
         },
       },
       {
         "@type": "Offer",
         itemOffered: {
           "@type": "Service",
-          name: "Digital Marketing",
+          name: "Digital Marketing & SEO Lead Generation",
           description:
-            "Social Media Marketing, Lead Generation, SEO, Campaign Strategy and Conversion Optimisation for businesses across India.",
+            "Full-funnel digital marketing, local SEO, lead generation campaigns, and conversion optimization.",
         },
       },
     ],
   },
 };
 
-/** AEO: FAQPage schema — targets Google featured snippets & voice search answers */
+/** AEO: FAQPage Schema for Voice & AI Search */
 const faqSchema = {
   "@context": "https://schema.org",
   "@type": "FAQPage",
-  mainEntity: [
+  mainEntity: faqs.map((faq) => ({
+    "@type": "Question",
+    name: faq.question,
+    acceptedAnswer: {
+      "@type": "Answer",
+      text: faq.answer,
+    },
+  })),
+};
+
+/** BreadcrumbList Schema */
+const breadcrumbSchema = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  itemListElement: [
     {
-      "@type": "Question",
-      name: "Who is Shanmugavel?",
-      acceptedAnswer: {
-        "@type": "Answer",
-        text: "Shanmugavel (known as Shanmu) is a Tamil Nadu-based digital creator, full-stack developer, graphic designer and entrepreneur with 5+ years of experience. He helps businesses build better websites, brands, content and digital growth systems.",
-      },
+      "@type": "ListItem",
+      position: 1,
+      name: "Home",
+      item: SITE_URL,
     },
     {
-      "@type": "Question",
-      name: "What services does Shanmu offer?",
-      acceptedAnswer: {
-        "@type": "Answer",
-        text: "Shanmu offers Website Development (WordPress, landing pages, e-commerce), Graphic Design (brand identity, social media creatives), Video Editing (reels, promotional videos), Social Media Management, and Digital Marketing (SEO, lead generation, campaign strategy).",
-      },
+      "@type": "ListItem",
+      position: 2,
+      name: "Services",
+      item: `${SITE_URL}#services`,
     },
     {
-      "@type": "Question",
-      name: "How can I contact Shanmugavel?",
-      acceptedAnswer: {
-        "@type": "Answer",
-        text: "You can contact Shanmugavel via email at shanmugavelnkt@gmail.com, on WhatsApp at +91 7010146105, on Instagram at @shanmu_og, or on LinkedIn at linkedin.com/in/shanmugavel-nkt.",
-      },
+      "@type": "ListItem",
+      position: 3,
+      name: "Case Studies",
+      item: `${SITE_URL}#work`,
     },
     {
-      "@type": "Question",
-      name: "What is Shadivi?",
-      acceptedAnswer: {
-        "@type": "Answer",
-        text: "Shadivi is a live SaaS digital platform founded by Shanmugavel that simplifies how brands plan and publish content online.",
-      },
+      "@type": "ListItem",
+      position: 4,
+      name: "FAQ",
+      item: `${SITE_URL}#faq`,
     },
     {
-      "@type": "Question",
-      name: "What is VelzX?",
-      acceptedAnswer: {
-        "@type": "Answer",
-        text: "VelzX is a creative technology studio founded by Shanmugavel that builds automation tools and digital solutions for modern businesses.",
-      },
-    },
-    {
-      "@type": "Question",
-      name: "How much experience does Shanmu have?",
-      acceptedAnswer: {
-        "@type": "Answer",
-        text: "Shanmu has 5+ years of experience in digital creation, web development and design, having worked with 20+ clients and helped generate over ₹2 Crore in revenue for his clients.",
-      },
+      "@type": "ListItem",
+      position: 5,
+      name: "Contact",
+      item: `${SITE_URL}#contact`,
     },
   ],
 };
 
-/** SEO: WebSite schema with SearchAction for sitelinks search box */
+/** WebSite Schema with SearchAction */
 const websiteSchema = {
   "@context": "https://schema.org",
   "@type": "WebSite",
   "@id": `${SITE_URL}/#website`,
   url: SITE_URL,
-  name: "Shanmu",
+  name: "Shanmu | Website Developer & Digital Growth Specialist",
   description,
   publisher: { "@id": `${SITE_URL}/#person` },
   inLanguage: "en-IN",
@@ -226,6 +241,7 @@ export const Route = createFileRoute("/")({
       { type: "application/ld+json", children: JSON.stringify(personSchema) },
       { type: "application/ld+json", children: JSON.stringify(serviceSchema) },
       { type: "application/ld+json", children: JSON.stringify(faqSchema) },
+      { type: "application/ld+json", children: JSON.stringify(breadcrumbSchema) },
       { type: "application/ld+json", children: JSON.stringify(websiteSchema) },
     ],
   }),
@@ -247,6 +263,7 @@ function Index() {
         <Products />
         <Process />
         <WhyMe />
+        <FAQ />
         <Statement />
         <FinalCTA />
         <Contact />

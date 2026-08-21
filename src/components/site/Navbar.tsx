@@ -33,7 +33,7 @@ export function Navbar() {
             SHANMU
           </span>
           <span className="mt-0.5 hidden label-xs text-gold/70 md:block tracking-[0.25em]">
-            Digital Creator · Entrepreneur
+            Website Developer · Growth Specialist
           </span>
         </a>
 

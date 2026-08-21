@@ -13,7 +13,7 @@ export function Footer() {
             </span>
           </a>
           <p className="mt-2.5 max-w-sm label-xs text-cream/60 leading-relaxed">
-            Digital Creator · Developer · Designer · Entrepreneur
+            Website Developer &amp; Digital Growth Specialist · Coimbatore, India
           </p>
 
           {/* Social Media Icons directly under name & title */}
