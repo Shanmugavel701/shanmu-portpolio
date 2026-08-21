@@ -1,3 +1,4 @@
+import { MapPin, Globe } from "lucide-react";
 import shanmuPortrait from "@/assets/Shanmu.jpeg";
 
 export function Hero() {
@@ -9,17 +10,34 @@ export function Hero() {
       <div className="mx-auto grid max-w-[1400px] w-full items-center gap-10 px-5 md:px-10 lg:grid-cols-[1.15fr_0.85fr] lg:gap-16">
         {/* Left Column: Copy & CTAs */}
         <div className="reveal is-visible">
-          <div className="flex flex-wrap items-center gap-2.5">
-            <span className="inline-flex items-center gap-1.5 rounded-full border border-primary/20 bg-primary/5 px-3 py-1 font-poppins text-[0.7rem] font-semibold text-primary tracking-wide">
-              <span className="h-1.5 w-1.5 rounded-full bg-gold animate-pulse" aria-hidden="true" />
-              Website Developer &amp; Growth Specialist
-            </span>
-            <span className="label-xs text-muted-foreground">
-              Coimbatore, India · Working Globally
-            </span>
+          {/* Designed Dual-Badge Label System */}
+          <div className="flex flex-wrap items-center gap-2.5 sm:gap-3">
+            {/* Badge 1: Role & Live Status */}
+            <div className="inline-flex items-center gap-2 rounded-full border border-primary/25 bg-primary/8 px-3.5 py-1.5 shadow-xs backdrop-blur-md transition-all duration-300 hover:border-gold/60 hover:bg-gold/10">
+              <span className="relative flex h-2 w-2" aria-hidden="true">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500" />
+              </span>
+              <span className="font-poppins text-[0.72rem] font-semibold text-primary tracking-wide">
+                Website Developer &amp; Growth Specialist
+              </span>
+            </div>
+
+            {/* Badge 2: Location & Global Reach */}
+            <div className="inline-flex items-center gap-2 rounded-full border border-border/90 bg-secondary/80 px-3.5 py-1.5 text-[0.72rem] font-poppins shadow-xs backdrop-blur-md transition-all duration-300 hover:border-gold/50">
+              <span className="flex items-center gap-1 text-gold">
+                <MapPin className="h-3 w-3 stroke-[2.2]" aria-hidden="true" />
+                <span className="font-semibold text-foreground">Coimbatore, India</span>
+              </span>
+              <span className="text-border" aria-hidden="true">•</span>
+              <span className="flex items-center gap-1 text-muted-foreground">
+                <Globe className="h-3 w-3 stroke-[1.8]" aria-hidden="true" />
+                <span className="font-medium">Working Globally</span>
+              </span>
+            </div>
           </div>
 
-          <h1 className="mt-5 font-display text-[clamp(2.1rem,4.2vw,3.7rem)] font-semibold leading-[1.12] tracking-tight text-foreground">
+          <h1 className="mt-6 font-display text-[clamp(2.1rem,4.2vw,3.7rem)] font-semibold leading-[1.12] tracking-tight text-foreground">
             I Build High-Converting
             <br />
             <span className="text-primary font-bold">Websites &amp; Brands</span>
