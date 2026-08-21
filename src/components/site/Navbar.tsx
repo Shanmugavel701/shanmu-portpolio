@@ -27,34 +27,37 @@ export function Navbar() {
           : "border-transparent"
       }`}
     >
-      <div className="mx-auto flex h-18 max-w-[1400px] items-center justify-between px-5 py-4 md:px-10">
-        <a href="#top" className="group leading-tight">
-          <span className="font-display text-xl tracking-wider text-gold md:text-2xl font-medium">
+      <div className="mx-auto flex h-18 max-w-[1400px] items-center justify-between px-5 py-3 md:px-10">
+        {/* Brand Logo - Single Line */}
+        <a href="#top" className="group flex items-center gap-3 shrink-0">
+          <span className="font-display text-xl tracking-wider text-gold md:text-2xl font-medium whitespace-nowrap">
             SHANMU
           </span>
-          <span className="mt-0.5 hidden label-xs text-gold/70 md:block tracking-[0.25em]">
-            Website Developer · Growth Specialist
+          <span className="hidden xl:inline-block label-xs text-gold/70 tracking-[0.2em] border-l border-gold/30 pl-3 whitespace-nowrap">
+            Website Developer
           </span>
         </a>
 
-        <nav className="hidden items-center gap-9 lg:flex" aria-label="Primary">
+        {/* Desktop Nav - Guaranteed Single Line */}
+        <nav className="hidden items-center gap-5 xl:gap-7 lg:flex shrink-0" aria-label="Primary">
           {nav.map((item) => (
             <a
               key={item.href}
               href={item.href}
-              className="label-xs text-cream/85 transition-colors hover:text-gold"
+              className="label-xs text-cream/85 transition-colors hover:text-gold whitespace-nowrap"
             >
               {item.label}
             </a>
           ))}
           <a
             href="#contact"
-            className="label-xs border border-gold px-6 py-2.5 text-gold tracking-widest transition-colors hover:bg-gold hover:text-ink"
+            className="label-xs border border-gold px-5 py-2.5 text-gold tracking-widest transition-colors hover:bg-gold hover:text-ink whitespace-nowrap shrink-0"
           >
             Let's Work Together
           </a>
         </nav>
 
+        {/* Mobile Hamburger Button */}
         <button
           type="button"
           aria-label={open ? "Close menu" : "Open menu"}
@@ -71,6 +74,7 @@ export function Navbar() {
         </button>
       </div>
 
+      {/* Mobile Drawer */}
       <div
         className={`fixed inset-0 top-0 z-40 flex flex-col bg-deep px-6 pt-28 pb-12 transition-all duration-500 lg:hidden ${
           open ? "pointer-events-auto opacity-100" : "pointer-events-none opacity-0"
