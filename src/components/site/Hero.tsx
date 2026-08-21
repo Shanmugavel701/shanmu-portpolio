@@ -5,13 +5,13 @@ export function Hero() {
   return (
     <section
       id="top"
-      className="relative flex items-center overflow-hidden pt-28 pb-16 sm:pt-32 sm:pb-20 md:pt-36 md:pb-24 lg:pt-40 lg:pb-28"
+      className="relative flex items-center overflow-hidden pt-24 pb-14 sm:pt-32 sm:pb-20 md:pt-36 md:pb-24 lg:pt-40 lg:pb-28"
     >
       <div className="mx-auto grid max-w-[1400px] w-full items-center gap-10 px-5 md:px-10 lg:grid-cols-[1.15fr_0.85fr] lg:gap-16">
         {/* Left Column: Copy & CTAs */}
         <div className="reveal is-visible">
-          {/* Designed Dual-Badge Label System */}
-          <div className="flex flex-wrap items-center gap-2.5 sm:gap-3">
+          {/* Designed Dual-Badge Label System — Hidden on Mobile */}
+          <div className="hidden sm:flex flex-wrap items-center gap-2.5 sm:gap-3">
             {/* Badge 1: Role & Live Status */}
             <div className="inline-flex items-center gap-2 rounded-full border border-primary/25 bg-primary/8 px-3.5 py-1.5 shadow-xs backdrop-blur-md transition-all duration-300 hover:border-gold/60 hover:bg-gold/10">
               <span className="relative flex h-2 w-2" aria-hidden="true">
@@ -37,7 +37,7 @@ export function Hero() {
             </div>
           </div>
 
-          <h1 className="mt-6 font-display text-[clamp(2.1rem,4.2vw,3.7rem)] font-semibold leading-[1.12] tracking-tight text-foreground">
+          <h1 className="mt-0 sm:mt-6 font-display text-[clamp(2.1rem,4.2vw,3.7rem)] font-semibold leading-[1.12] tracking-tight text-foreground">
             I Build High-Converting
             <br />
             <span className="text-primary font-bold">Websites &amp; Brands</span>
