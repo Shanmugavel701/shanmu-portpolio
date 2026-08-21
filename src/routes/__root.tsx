@@ -77,22 +77,62 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Shanmu | Digital Creator, Developer & Entrepreneur" },
+
+      // ── SEO Core ──────────────────────────────────────────────────
+      { title: "Shanmu | Digital Creator, Developer & Entrepreneur — Tamil Nadu, India" },
       {
         name: "description",
         content:
-          "Shanmu is a digital creator, developer and entrepreneur helping businesses build better websites, brands, content and digital growth systems.",
+          "Shanmugavel (Shanmu) is a Tamil Nadu-based digital creator, full-stack developer, graphic designer and entrepreneur. 5+ years · 20+ clients · ₹2Cr+ revenue generated. Services: Website Development, Graphic Design, Video Editing, Social Media & Digital Marketing.",
       },
-      { name: "author", content: "Shanmu" },
+      { name: "author", content: "Shanmugavel" },
+      {
+        name: "keywords",
+        content:
+          "Shanmugavel, Shanmu, digital creator Tamil Nadu, web developer India, graphic designer, video editor, social media manager, digital marketing, website development, brand identity, Shadivi, VelzX, freelancer India",
+      },
+      { name: "robots", content: "index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" },
+      { name: "theme-color", content: "#0a0a0a" },
+      { name: "rating", content: "general" },
+      { name: "revisit-after", content: "7 days" },
+      { name: "language", content: "English" },
+      { name: "geo.region", content: "IN-TN" },
+      { name: "geo.placename", content: "Tamil Nadu, India" },
+
+      // ── Open Graph (SEO + AEO) ─────────────────────────────────────
       { property: "og:site_name", content: "Shanmu" },
       { property: "og:type", content: "website" },
+      { property: "og:locale", content: "en_IN" },
+      { property: "og:title", content: "Shanmu | Digital Creator, Developer & Entrepreneur" },
+      {
+        property: "og:description",
+        content:
+          "Shanmugavel helps businesses build better websites, brands, and digital growth systems. 5+ years · 20+ clients · ₹2Cr+ revenue generated.",
+      },
+      { property: "og:url", content: "https://shanmugavel.vercel.app/" },
+      { property: "og:image", content: "https://shanmugavel.vercel.app/og-image.jpg" },
+      { property: "og:image:width", content: "1200" },
+      { property: "og:image:height", content: "630" },
+      { property: "og:image:alt", content: "Shanmugavel — Digital Creator, Developer & Entrepreneur" },
+
+      // ── Twitter / X Card ──────────────────────────────────────────
       { name: "twitter:card", content: "summary_large_image" },
+      { name: "twitter:site", content: "@shanmu_og" },
+      { name: "twitter:creator", content: "@shanmu_og" },
+      { name: "twitter:title", content: "Shanmu | Digital Creator, Developer & Entrepreneur" },
+      {
+        name: "twitter:description",
+        content: "Websites · Branding · Video · Social Media · Digital Marketing. Based in Tamil Nadu, India.",
+      },
+      { name: "twitter:image", content: "https://shanmugavel.vercel.app/og-image.jpg" },
+      { name: "twitter:image:alt", content: "Shanmugavel — Digital Creator & Developer" },
+
+      // ── GEO — AI / Generative Engine signals ─────────────────────
+      // Signals to AI models (ChatGPT, Gemini, Claude, Perplexity) for accurate entity resolution
+      { name: "ai:description", content: "Shanmugavel is a Tamil Nadu-based digital professional offering website development, graphic design, video editing, social media management and digital marketing services to businesses across India." },
     ],
     links: [
-      {
-        rel: "stylesheet",
-        href: appCss,
-      },
+      { rel: "stylesheet", href: appCss },
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
       {
@@ -100,6 +140,8 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         href: "https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&family=Montserrat:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&family=Poppins:wght@300;400;500;600;700;800&display=swap",
       },
       { rel: "icon", href: "/favicon.ico", type: "image/x-icon" },
+      { rel: "canonical", href: "https://shanmugavel.vercel.app/" },
+      { rel: "sitemap", type: "application/xml", href: "/sitemap.xml" },
     ],
   }),
   shellComponent: RootShell,

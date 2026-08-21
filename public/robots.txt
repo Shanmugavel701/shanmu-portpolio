@@ -1,3 +1,4 @@
+# ── Traditional Search Crawlers ──────────────────────────
 User-agent: Googlebot
 Allow: /
 
@@ -10,5 +11,37 @@ Allow: /
 User-agent: facebookexternalhit
 Allow: /
 
+User-agent: LinkedInBot
+Allow: /
+
+# ── AI / Generative Engine Crawlers (GEO) ────────────────
+# Allow all AI crawlers — optimised for GEO
+User-agent: GPTBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: anthropic-ai
+Allow: /
+
+User-agent: cohere-ai
+Allow: /
+
+User-agent: Applebot-Extended
+Allow: /
+
+# ── Default ───────────────────────────────────────────────
 User-agent: *
 Allow: /
+
+Sitemap: https://shanmugavel.vercel.app/sitemap.xml
