@@ -44,4 +44,4 @@ Allow: /
 User-agent: *
 Allow: /
 
-Sitemap: https://shanmugavel.vercel.app/sitemap.xml
+Sitemap: https://www.velzx.com/.xml

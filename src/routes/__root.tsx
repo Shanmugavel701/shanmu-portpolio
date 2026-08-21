@@ -109,8 +109,8 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         content:
           "Freelance Website & WordPress Developer in Coimbatore, India. Custom business websites, WooCommerce stores, speed optimization & digital growth systems.",
       },
-      { property: "og:url", content: "https://shanmugavel.vercel.app/" },
-      { property: "og:image", content: "https://shanmugavel.vercel.app/og-image.jpg" },
+      { property: "og:url", content: "https://www.velzx.com/" },
+      { property: "og:image", content: "https://www.velzx.com/og-image.png" },
       { property: "og:image:width", content: "1200" },
       { property: "og:image:height", content: "630" },
       { property: "og:image:alt", content: "Shanmu — Website Developer & Digital Growth Specialist" },
@@ -124,7 +124,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         name: "twitter:description",
         content: "Custom WordPress, Business Websites, E-Commerce & Lead Generation. Based in Coimbatore, India · Working Globally.",
       },
-      { name: "twitter:image", content: "https://shanmugavel.vercel.app/og-image.jpg" },
+      { name: "twitter:image", content: "https://www.velzx.com/og-image.png" },
       { name: "twitter:image:alt", content: "Shanmu — Website Developer & Digital Growth Specialist" },
 
       // ── GEO — AI / Generative Engine signals ─────────────────────
@@ -145,7 +145,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { rel: "icon", href: "/favicon.png", type: "image/png" },
       { rel: "icon", href: "/favicon.ico", type: "image/x-icon" },
       { rel: "apple-touch-icon", href: "/favicon.png" },
-      { rel: "canonical", href: "https://shanmugavel.vercel.app/" },
+      { rel: "canonical", href: "https://www.velzx.com/" },
       { rel: "sitemap", type: "application/xml", href: "/sitemap.xml" },
     ],
   }),
