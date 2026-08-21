@@ -1,6 +1,7 @@
 import { useState, useRef, type FormEvent } from "react";
 import { contact } from "@/data/site";
 import { Reveal, SectionLabel } from "./Reveal";
+import { speakFemaleVoice } from "@/lib/speech";
 
 const WEBHOOK_URL = import.meta.env["VITE_SHEETS_WEBHOOK"] as string | undefined;
 
@@ -35,6 +36,7 @@ export function Contact() {
         console.log("📋 Lead (webhook not configured):", payload);
         await new Promise((r) => setTimeout(r, 800)); // simulate delay
         setStatus("success");
+        speakFemaleVoice(`Thank you ${payload.name || ""}! Your enquiry has been received. Shanmu will be in touch with you shortly.`);
         formRef.current?.reset();
         return;
       }
@@ -50,6 +52,7 @@ export function Contact() {
       });
 
       setStatus("success");
+      speakFemaleVoice(`Thank you ${payload.name || ""}! Your enquiry has been received. Shanmu will be in touch with you shortly.`);
       formRef.current?.reset();
     } catch (err) {
       console.error("Contact form error:", err);

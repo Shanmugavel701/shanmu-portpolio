@@ -12,8 +12,11 @@ import {
   RefreshCw,
   ExternalLink,
   ChevronDown,
+  Volume2,
+  VolumeX,
 } from "lucide-react";
 import { contact, services } from "@/data/site";
+import { speakFemaleVoice, setVoiceMuted } from "@/lib/speech";
 
 interface Message {
   id: string;
@@ -109,13 +112,14 @@ function getBotAnswer(userInput: string): { text: string; quickReplies?: string[
   }
 
   return {
-    text: "Thanks for asking! Shanmu specializes in high-impact websites, brand identity, video editing, and digital growth marketing. Would you like to share your project requirements or connect directly on WhatsApp?",
+    text: "Thanks for asking! Shanmu specializes in high-converting websites, custom WordPress, brand identity, and digital growth marketing. Would you like to share your project requirements or connect directly on WhatsApp?",
     quickReplies: ["📝 Get a Project Estimate", "💬 Chat on WhatsApp", "🌟 Explore Services"],
   };
 }
 
 export function AIAssistant() {
   const [isOpen, setIsOpen] = useState(false);
+  const [isMuted, setIsMuted] = useState(false);
   const [messages, setMessages] = useState<Message[]>([
     {
       id: "1",
@@ -143,6 +147,7 @@ export function AIAssistant() {
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  const hasWelcomed = useRef(false);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -153,8 +158,14 @@ export function AIAssistant() {
       scrollToBottom();
       setHasUnread(false);
       setTimeout(() => inputRef.current?.focus(), 200);
+
+      // Speak female voice greeting when user opens the assistant
+      if (!hasWelcomed.current && !isMuted) {
+        hasWelcomed.current = true;
+        speakFemaleVoice("Welcome to Shanmu's Assistant! How can I help you scale your business today?");
+      }
     }
-  }, [isOpen, messages, isTyping]);
+  }, [isOpen, messages, isTyping, isMuted]);
 
   const handleSendMessage = (textToSend?: string) => {
     const text = (textToSend || input).trim();
@@ -184,6 +195,11 @@ export function AIAssistant() {
       };
       setMessages((prev) => [...prev, botMsg]);
       setIsTyping(false);
+
+      // Voice Assistant speech in female voice
+      if (!isMuted) {
+        speakFemaleVoice(botReply);
+      }
     }, 700);
   };
 
@@ -207,6 +223,11 @@ export function AIAssistant() {
     };
 
     setMessages((prev) => [...prev, botConfirmMsg]);
+
+    // Voice Assistant speech confirmation
+    if (!isMuted) {
+      speakFemaleVoice(`Thank you ${leadForm.name}! Your project details have been received. Shanmu will connect with you shortly.`);
+    }
   };
 
   const handleQuickReply = (reply: string) => {
@@ -293,7 +314,8 @@ export function AIAssistant() {
         <div
           role="dialog"
           aria-label="Shanmu AI Assistant"
-          className="fixed bottom-24 right-4 sm:right-6 z-50 flex w-[calc(100vw-2rem)] sm:w-[390px] flex-col overflow-hidden rounded-3xl border border-gold/30 bg-[#0c2418]/95 shadow-[0_20px_50px_rgba(0,0,0,0.6)] backdrop-blur-xl font-poppins text-cream animate-in fade-in zoom-in-95 duration-200" style={{height: 'min(580px, calc(100dvh - 7rem))'}}
+          className="fixed bottom-24 right-4 sm:right-6 z-50 flex w-[calc(100vw-2rem)] sm:w-[390px] flex-col overflow-hidden rounded-3xl border border-gold/30 bg-[#0c2418]/95 shadow-[0_20px_50px_rgba(0,0,0,0.6)] backdrop-blur-xl font-poppins text-cream animate-in fade-in zoom-in-95 duration-200"
+          style={{ height: "min(580px, calc(100dvh - 7rem))" }}
         >
           {/* Header */}
           <div className="relative flex items-center justify-between border-b border-cream/15 bg-gradient-to-r from-[#091f14] via-[#0f2e1e] to-[#091f14] px-5 py-4">
@@ -309,18 +331,43 @@ export function AIAssistant() {
                     Online
                   </span>
                 </div>
-                <p className="text-[0.72rem] text-cream/65">Smart Project &amp; Growth Assistant</p>
+                <p className="text-[0.72rem] text-cream/65">Voice &amp; Growth Assistant</p>
               </div>
             </div>
 
-            <button
-              type="button"
-              onClick={() => setIsOpen(false)}
-              className="flex h-8 w-8 items-center justify-center rounded-full text-cream/60 transition-colors hover:bg-white/10 hover:text-white"
-              aria-label="Close Chat"
-            >
-              <X className="h-4 w-4" />
-            </button>
+            <div className="flex items-center gap-1.5">
+              {/* Voice Mute / Unmute Button */}
+              <button
+                type="button"
+                onClick={() => {
+                  const nextMuted = !isMuted;
+                  setIsMuted(nextMuted);
+                  setVoiceMuted(nextMuted);
+                  if (!nextMuted) {
+                    speakFemaleVoice("Voice enabled. Welcome to Shanmu's assistant!", true);
+                  }
+                }}
+                className={`flex h-8 w-8 items-center justify-center rounded-full transition-all duration-300 ${
+                  isMuted
+                    ? "text-cream/40 hover:text-cream bg-white/5"
+                    : "text-gold bg-gold/15 hover:bg-gold/25 shadow-xs"
+                }`}
+                aria-label={isMuted ? "Enable Voice Assistant" : "Mute Voice Assistant"}
+                title={isMuted ? "Unmute Voice" : "Mute Voice"}
+              >
+                {isMuted ? <VolumeX className="h-4 w-4" /> : <Volume2 className="h-4 w-4 animate-pulse" />}
+              </button>
+
+              {/* Close Button */}
+              <button
+                type="button"
+                onClick={() => setIsOpen(false)}
+                className="flex h-8 w-8 items-center justify-center rounded-full text-cream/60 transition-colors hover:bg-white/10 hover:text-white"
+                aria-label="Close Chat"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            </div>
           </div>
 
           {/* Messages Container */}
@@ -359,61 +406,67 @@ export function AIAssistant() {
                           className="w-full rounded-lg border border-cream/20 bg-black/30 px-3 py-1.5 text-xs text-white placeholder:text-cream/40 focus:border-gold focus:outline-none"
                         />
                       </div>
+
                       <div>
-                        <label className="block text-[0.68rem] text-cream/75 mb-1 font-medium">WhatsApp / Email *</label>
+                        <label className="block text-[0.68rem] text-cream/75 mb-1 font-medium">
+                          Email or WhatsApp *
+                        </label>
                         <input
                           type="text"
                           required
                           value={leadForm.contactInfo}
                           onChange={(e) => setLeadForm({ ...leadForm, contactInfo: e.target.value })}
-                          placeholder="e.g. +91 98765 43210 or email"
+                          placeholder="you@company.com or Phone"
                           className="w-full rounded-lg border border-cream/20 bg-black/30 px-3 py-1.5 text-xs text-white placeholder:text-cream/40 focus:border-gold focus:outline-none"
                         />
                       </div>
+
                       <div>
-                        <label className="block text-[0.68rem] text-cream/75 mb-1 font-medium">Project Type</label>
+                        <label className="block text-[0.68rem] text-cream/75 mb-1 font-medium">Service Needed</label>
                         <select
                           value={leadForm.service}
                           onChange={(e) => setLeadForm({ ...leadForm, service: e.target.value })}
-                          className="w-full rounded-lg border border-cream/20 bg-[#0d281a] px-3 py-1.5 text-xs text-white focus:border-gold focus:outline-none"
+                          className="w-full rounded-lg border border-cream/20 bg-[#091f14] px-2.5 py-1.5 text-xs text-white focus:border-gold focus:outline-none"
                         >
                           <option value="Website Development">Website Development</option>
-                          <option value="Branding & Graphic Design">Branding & Graphic Design</option>
+                          <option value="WordPress Development">WordPress Development</option>
+                          <option value="E-Commerce Store">E-Commerce Store</option>
+                          <option value="Website Redesign & Speed">Website Redesign &amp; Speed</option>
+                          <option value="Brand Identity & Design">Brand Identity &amp; Design</option>
                           <option value="Video Editing">Video Editing</option>
-                          <option value="Digital Marketing & Leads">Digital Marketing & Leads</option>
-                          <option value="Full Digital Package">Full Digital Package</option>
+                          <option value="Digital Marketing & SEO">Digital Marketing &amp; SEO</option>
                         </select>
                       </div>
+
                       <div>
-                        <label className="block text-[0.68rem] text-cream/75 mb-1 font-medium">Quick Note (Optional)</label>
-                        <input
-                          type="text"
+                        <label className="block text-[0.68rem] text-cream/75 mb-1 font-medium">Project Brief</label>
+                        <textarea
+                          rows={2}
                           value={leadForm.details}
                           onChange={(e) => setLeadForm({ ...leadForm, details: e.target.value })}
-                          placeholder="e.g. Target budget, launch deadline..."
-                          className="w-full rounded-lg border border-cream/20 bg-black/30 px-3 py-1.5 text-xs text-white placeholder:text-cream/40 focus:border-gold focus:outline-none"
+                          placeholder="Tell us about your project or goals"
+                          className="w-full resize-none rounded-lg border border-cream/20 bg-black/30 px-3 py-1.5 text-xs text-white placeholder:text-cream/40 focus:border-gold focus:outline-none"
                         />
                       </div>
 
                       <button
                         type="submit"
-                        className="mt-2 flex w-full items-center justify-center gap-2 rounded-lg bg-gold py-2 text-xs font-semibold text-ink shadow-md transition-all hover:bg-gold/90 hover:scale-[1.02] active:scale-95"
+                        className="mt-2 w-full flex items-center justify-center gap-2 rounded-xl bg-gold py-2.5 text-xs font-semibold text-ink shadow-md transition-all hover:bg-[#e5c158] active:scale-98"
                       >
-                        <span>Submit Project Brief</span>
-                        <ArrowRight className="h-3.5 w-3.5" />
+                        Submit Project Request <ArrowRight className="h-3.5 w-3.5" />
                       </button>
                     </form>
                   )}
 
-                  {/* Quick Reply Chips */}
-                  {m.quickReplies && (
-                    <div className="mt-3 flex flex-wrap gap-1.5">
+                  {/* Quick Action Buttons */}
+                  {m.quickReplies && m.quickReplies.length > 0 && (
+                    <div className="mt-3 flex flex-wrap gap-1.5 border-t border-cream/10 pt-2.5">
                       {m.quickReplies.map((qr) => (
                         <button
                           key={qr}
                           type="button"
                           onClick={() => handleQuickReply(qr)}
-                          className="rounded-full border border-gold/30 bg-gold/10 px-2.5 py-1 text-[0.7rem] font-medium text-gold transition-all duration-200 hover:bg-gold hover:text-ink active:scale-95 text-left"
+                          className="rounded-full border border-gold/40 bg-gold/10 px-3 py-1 text-[0.7rem] font-medium text-gold transition-all hover:bg-gold hover:text-ink active:scale-95 text-left"
                         >
                           {qr}
                         </button>
@@ -421,75 +474,86 @@ export function AIAssistant() {
                     </div>
                   )}
                 </div>
-
-                {m.sender === "user" && (
-                  <div className="mt-1 flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-gold text-ink">
-                    <User className="h-3.5 w-3.5" />
-                  </div>
-                )}
               </div>
             ))}
 
-            {/* Typing Indicator */}
             {isTyping && (
-              <div className="flex gap-2.5 justify-start items-center">
-                <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-gold/20 text-gold border border-gold/30">
+              <div className="flex items-center gap-2 text-cream/60 text-xs">
+                <div className="flex h-7 w-7 items-center justify-center rounded-full bg-gold/20 text-gold border border-gold/30">
                   <Bot className="h-3.5 w-3.5" />
                 </div>
-                <div className="rounded-2xl rounded-tl-none border border-cream/10 bg-white/[0.07] px-4 py-3 text-cream/70">
-                  <div className="flex items-center gap-1.5">
-                    <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-gold" />
-                    <span className="h-1.5 w-1.5 animate-bounce [animation-delay:0.2s] rounded-full bg-gold" />
-                    <span className="h-1.5 w-1.5 animate-bounce [animation-delay:0.4s] rounded-full bg-gold" />
-                  </div>
+                <div className="flex gap-1 rounded-full bg-white/5 px-3 py-1.5 border border-white/10">
+                  <span className="h-1.5 w-1.5 rounded-full bg-gold animate-bounce" />
+                  <span
+                    className="h-1.5 w-1.5 rounded-full bg-gold animate-bounce"
+                    style={{ animationDelay: "150ms" }}
+                  />
+                  <span
+                    className="h-1.5 w-1.5 rounded-full bg-gold animate-bounce"
+                    style={{ animationDelay: "300ms" }}
+                  />
                 </div>
               </div>
             )}
-
             <div ref={messagesEndRef} />
           </div>
 
-          {/* Quick Action Footer Strip */}
-          <div className="flex items-center justify-between border-t border-cream/10 bg-black/20 px-4 py-2 text-[0.7rem] text-cream/65">
-            <button
-              onClick={() => handleQuickReply("Restart")}
-              className="flex items-center gap-1 hover:text-gold transition-colors"
-            >
-              <RefreshCw className="h-3 w-3" />
-              <span>Restart</span>
-            </button>
-            <a
-              href={contact.whatsapp}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center gap-1 text-emerald-400 hover:text-emerald-300 font-medium transition-colors"
-            >
-              <span>Direct WhatsApp</span>
-              <ExternalLink className="h-3 w-3" />
-            </a>
+          {/* Quick FAQ / Services Bar */}
+          <div className="border-t border-cream/10 bg-black/20 px-3 py-2">
+            <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar text-[0.68rem] text-cream/75">
+              <span className="shrink-0 text-gold font-medium">Quick:</span>
+              <button
+                type="button"
+                onClick={() => handleSendMessage("💻 Tell me about Website Development")}
+                className="shrink-0 rounded-md bg-white/5 px-2 py-0.5 hover:bg-gold/20 hover:text-gold transition-colors"
+              >
+                Website Dev
+              </button>
+              <button
+                type="button"
+                onClick={() => handleSendMessage("🛍️ E-Commerce & WooCommerce")}
+                className="shrink-0 rounded-md bg-white/5 px-2 py-0.5 hover:bg-gold/20 hover:text-gold transition-colors"
+              >
+                E-Commerce
+              </button>
+              <button
+                type="button"
+                onClick={() => handleSendMessage("💰 How much does a website cost?")}
+                className="shrink-0 rounded-md bg-white/5 px-2 py-0.5 hover:bg-gold/20 hover:text-gold transition-colors"
+              >
+                Pricing
+              </button>
+              <button
+                type="button"
+                onClick={() => handleSendMessage("📍 Where are you located?")}
+                className="shrink-0 rounded-md bg-white/5 px-2 py-0.5 hover:bg-gold/20 hover:text-gold transition-colors"
+              >
+                Location
+              </button>
+            </div>
           </div>
 
-          {/* Input Box */}
+          {/* Input Footer */}
           <form
             onSubmit={(e) => {
               e.preventDefault();
               handleSendMessage();
             }}
-            className="flex items-center gap-2 border-t border-cream/15 bg-black/40 p-3"
+            className="flex items-center gap-2 border-t border-cream/15 bg-gradient-to-r from-[#091f14] via-[#0f2e1e] to-[#091f14] p-3"
           >
             <input
               ref={inputRef}
               type="text"
               value={input}
               onChange={(e) => setInput(e.target.value)}
-              placeholder="Ask a question or request a quote..."
-              className="flex-1 rounded-full border border-cream/20 bg-white/5 px-4 py-2.5 text-xs text-white placeholder:text-cream/40 focus:border-gold focus:outline-none"
+              placeholder="Ask about website, pricing, SEO..."
+              className="flex-1 rounded-xl border border-cream/20 bg-black/30 px-3.5 py-2.5 text-xs text-white placeholder:text-cream/45 focus:border-gold focus:outline-none"
             />
             <button
               type="submit"
               disabled={!input.trim()}
               aria-label="Send message"
-              className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-gold text-ink transition-all hover:bg-gold/90 hover:scale-105 active:scale-95 disabled:opacity-40 disabled:hover:scale-100 cursor-pointer disabled:cursor-not-allowed"
+              className="flex h-9 w-9 items-center justify-center rounded-xl bg-gold text-ink transition-transform hover:scale-105 active:scale-95 disabled:opacity-40 disabled:hover:scale-100"
             >
               <Send className="h-4 w-4" />
             </button>
