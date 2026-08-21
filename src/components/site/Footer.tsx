@@ -1,4 +1,4 @@
-import { Instagram, Linkedin, Youtube, MessageCircle, ArrowRight } from "lucide-react";
+import { Instagram, Linkedin, MessageCircle, ArrowRight } from "lucide-react";
 import { contact, nav } from "@/data/site";
 
 export function Footer() {
@@ -36,15 +36,7 @@ export function Footer() {
             >
               <Linkedin className="h-4 w-4" />
             </a>
-            <a
-              href={contact.youtube}
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="YouTube"
-              className="flex h-10 w-10 items-center justify-center rounded-full border border-cream/20 text-cream/80 transition-all duration-300 hover:border-gold hover:text-gold hover:bg-gold/10 hover:scale-105"
-            >
-              <Youtube className="h-4 w-4" />
-            </a>
+
             <a
               href={contact.whatsapp}
               target="_blank"

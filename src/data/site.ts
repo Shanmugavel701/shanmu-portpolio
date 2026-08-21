@@ -7,10 +7,9 @@ export const nav = [
 ];
 
 export const contact = {
-  email: "hello@shanmu.example",
-  instagram: "https://instagram.com/",
-  linkedin: "https://linkedin.com/",
-  youtube: "https://youtube.com/",
+  email: "shanmugavelnkt@gmail.com",
+  instagram: "https://www.instagram.com/shanmu_og?igsi=NG9sNWI4Zm8yOXNm",
+  linkedin: "https://www.linkedin.com/in/shanmugavel-nkt",
   whatsapp: "https://wa.me/917010146105",
 };
 

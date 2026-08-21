@@ -1,16 +1,60 @@
-import { useState, type FormEvent } from "react";
+import { useState, useRef, type FormEvent } from "react";
 import { contact } from "@/data/site";
 import { Reveal, SectionLabel } from "./Reveal";
+
+const WEBHOOK_URL = import.meta.env.VITE_SHEETS_WEBHOOK as string | undefined;
 
 const field =
   "w-full border-0 border-b border-border bg-transparent py-3 text-sm text-foreground outline-none transition-colors placeholder:text-muted-foreground/70 focus:border-gold";
 
-export function Contact() {
-  const [sent, setSent] = useState(false);
+type Status = "idle" | "sending" | "success" | "error";
 
-  const onSubmit = (e: FormEvent<HTMLFormElement>) => {
+export function Contact() {
+  const [status, setStatus] = useState<Status>("idle");
+  const formRef = useRef<HTMLFormElement>(null);
+
+  const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setSent(true);
+    if (!formRef.current) return;
+
+    const fd = new FormData(formRef.current);
+    const payload = {
+      name: fd.get("name") as string,
+      email: fd.get("email") as string,
+      phone: fd.get("phone") as string,
+      company: fd.get("company") as string,
+      need: fd.get("need") as string,
+      message: fd.get("message") as string,
+    };
+
+    setStatus("sending");
+
+    try {
+      if (!WEBHOOK_URL || WEBHOOK_URL.includes("YOUR_DEPLOYMENT_ID")) {
+        // Dev fallback — log to console when the webhook is not configured yet
+        console.log("📋 Lead (webhook not configured):", payload);
+        await new Promise((r) => setTimeout(r, 800)); // simulate delay
+        setStatus("success");
+        formRef.current?.reset();
+        return;
+      }
+
+      // Google Apps Script Web App does not set CORS headers on fetch with
+      // mode:"cors" correctly, so we use no-cors and treat any network success
+      // as a submission success (Apps Script returns 200 on both success/fail).
+      await fetch(WEBHOOK_URL, {
+        method: "POST",
+        mode: "no-cors",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+
+      setStatus("success");
+      formRef.current?.reset();
+    } catch (err) {
+      console.error("Contact form error:", err);
+      setStatus("error");
+    }
   };
 
   return (
@@ -48,26 +92,41 @@ export function Contact() {
         </Reveal>
 
         <Reveal delay={100}>
-          <form onSubmit={onSubmit} className="grid gap-8 sm:grid-cols-2">
+          <form ref={formRef} onSubmit={onSubmit} className="grid gap-8 sm:grid-cols-2">
+            {/* Name */}
             <div>
               <label htmlFor="name" className="label-xs text-muted-foreground">
                 Name
               </label>
               <input id="name" name="name" required className={field} placeholder="Your name" />
             </div>
+
+            {/* Email */}
             <div>
               <label htmlFor="email" className="label-xs text-muted-foreground">
                 Email
               </label>
               <input id="email" name="email" type="email" required className={field} placeholder="you@company.com" />
             </div>
+
+            {/* Phone */}
+            <div>
+              <label htmlFor="phone" className="label-xs text-muted-foreground">
+                Phone
+              </label>
+              <input id="phone" name="phone" type="tel" className={field} placeholder="+91 98765 43210" />
+            </div>
+
+            {/* Company */}
             <div>
               <label htmlFor="company" className="label-xs text-muted-foreground">
                 Company
               </label>
               <input id="company" name="company" className={field} placeholder="Optional" />
             </div>
-            <div>
+
+            {/* Service */}
+            <div className="sm:col-span-2">
               <label htmlFor="need" className="label-xs text-muted-foreground">
                 What do you need?
               </label>
@@ -79,22 +138,51 @@ export function Contact() {
                 <option>Digital Marketing</option>
               </select>
             </div>
+
+            {/* Message */}
             <div className="sm:col-span-2">
               <label htmlFor="message" className="label-xs text-muted-foreground">
                 Message
               </label>
-              <textarea id="message" name="message" rows={4} className={`${field} resize-none`} placeholder="Tell me about your project" />
+              <textarea
+                id="message"
+                name="message"
+                rows={4}
+                className={`${field} resize-none`}
+                placeholder="Tell me about your project"
+              />
             </div>
+
+            {/* Submit */}
             <div className="sm:col-span-2">
               <button
                 type="submit"
-                className="label-xs inline-flex w-full items-center justify-center gap-3 bg-primary px-8 py-4 text-primary-foreground transition-colors hover:bg-deep sm:w-auto"
+                disabled={status === "sending"}
+                className="label-xs inline-flex w-full items-center justify-center gap-3 bg-primary px-8 py-4 text-primary-foreground transition-colors hover:bg-deep disabled:opacity-60 sm:w-auto"
               >
-                Send Enquiry <span aria-hidden="true">→</span>
+                {status === "sending" ? (
+                  <>
+                    <span
+                      className="inline-block h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent"
+                      aria-hidden="true"
+                    />
+                    Sending…
+                  </>
+                ) : (
+                  <>
+                    Send Enquiry <span aria-hidden="true">→</span>
+                  </>
+                )}
               </button>
-              {sent && (
+
+              {status === "success" && (
                 <p role="status" className="mt-4 label-xs text-gold">
-                  Thanks — your enquiry has been noted.
+                  ✓ Thanks — your enquiry has been noted. I'll be in touch shortly!
+                </p>
+              )}
+              {status === "error" && (
+                <p role="alert" className="mt-4 label-xs text-red-400">
+                  Something went wrong. Please try again or email me directly.
                 </p>
               )}
             </div>
