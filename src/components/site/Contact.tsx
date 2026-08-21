@@ -2,7 +2,7 @@ import { useState, useRef, type FormEvent } from "react";
 import { contact } from "@/data/site";
 import { Reveal, SectionLabel } from "./Reveal";
 
-const WEBHOOK_URL = import.meta.env.VITE_SHEETS_WEBHOOK as string | undefined;
+const WEBHOOK_URL = import.meta.env["VITE_SHEETS_WEBHOOK"] as string | undefined;
 
 const field =
   "w-full border-0 border-b border-border bg-transparent py-3 text-sm text-foreground outline-none transition-colors placeholder:text-muted-foreground/70 focus:border-gold";
