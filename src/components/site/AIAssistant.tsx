@@ -139,9 +139,11 @@ export function AIAssistant() {
   const [hasUnread, setHasUnread] = useState(true);
   const [leadForm, setLeadForm] = useState({
     name: "",
-    contactInfo: "",
+    email: "",
+    phone: "",
+    company: "",
     service: "Website Development",
-    details: "",
+    message: "",
   });
   const [leadSubmitted, setLeadSubmitted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -207,7 +209,7 @@ export function AIAssistant() {
 
   const handleLeadSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!leadForm.name || !leadForm.contactInfo) return;
+    if (!leadForm.name || !leadForm.email || !leadForm.phone || !leadForm.message) return;
 
     setIsSubmitting(true);
     setSubmitError("");
@@ -215,10 +217,14 @@ export function AIAssistant() {
     try {
       const webhookUrl = import.meta.env.VITE_SHEETS_WEBHOOK as string;
       const payload = {
-        name: leadForm.name,
-        contactInfo: leadForm.contactInfo,
-        service: leadForm.service,
-        details: leadForm.details || "Not provided",
+        name: leadForm.name.trim(),
+        email: leadForm.email.trim(),
+        phone: leadForm.phone.trim(),
+        company: leadForm.company.trim() || "—",
+        service: leadForm.service.trim() || "Website Development",
+        need: leadForm.service.trim() || "Website Development",
+        message: leadForm.message.trim(),
+        details: leadForm.message.trim(),
         timestamp: new Date().toLocaleString("en-IN", { timeZone: "Asia/Kolkata" }),
         source: "AI Chatbot",
       };
@@ -434,22 +440,44 @@ export function AIAssistant() {
                       </div>
 
                       <div>
-                        <label className="block text-[0.68rem] text-cream/75 mb-1 font-medium">
-                          Email or WhatsApp *
-                        </label>
+                        <label className="block text-[0.68rem] text-cream/75 mb-1 font-medium">Email *</label>
                         <input
-                          type="text"
+                          type="email"
                           required
-                          value={leadForm.contactInfo}
-                          onChange={(e) => setLeadForm({ ...leadForm, contactInfo: e.target.value })}
-                          placeholder="you@company.com or Phone"
+                          value={leadForm.email}
+                          onChange={(e) => setLeadForm({ ...leadForm, email: e.target.value })}
+                          placeholder="you@company.com"
                           className="w-full rounded-lg border border-cream/20 bg-black/30 px-3 py-1.5 text-xs text-white placeholder:text-cream/40 focus:border-gold focus:outline-none"
                         />
                       </div>
 
                       <div>
-                        <label className="block text-[0.68rem] text-cream/75 mb-1 font-medium">Service Needed</label>
+                        <label className="block text-[0.68rem] text-cream/75 mb-1 font-medium">Phone *</label>
+                        <input
+                          type="tel"
+                          required
+                          value={leadForm.phone}
+                          onChange={(e) => setLeadForm({ ...leadForm, phone: e.target.value })}
+                          placeholder="+91 98765 43210"
+                          className="w-full rounded-lg border border-cream/20 bg-black/30 px-3 py-1.5 text-xs text-white placeholder:text-cream/40 focus:border-gold focus:outline-none"
+                        />
+                      </div>
+
+                      <div>
+                        <label className="block text-[0.68rem] text-cream/75 mb-1 font-medium">Company (Optional)</label>
+                        <input
+                          type="text"
+                          value={leadForm.company}
+                          onChange={(e) => setLeadForm({ ...leadForm, company: e.target.value })}
+                          placeholder="Company or Brand name"
+                          className="w-full rounded-lg border border-cream/20 bg-black/30 px-3 py-1.5 text-xs text-white placeholder:text-cream/40 focus:border-gold focus:outline-none"
+                        />
+                      </div>
+
+                      <div>
+                        <label className="block text-[0.68rem] text-cream/75 mb-1 font-medium">Service Needed *</label>
                         <select
+                          required
                           value={leadForm.service}
                           onChange={(e) => setLeadForm({ ...leadForm, service: e.target.value })}
                           className="w-full rounded-lg border border-cream/20 bg-[#091f14] px-2.5 py-1.5 text-xs text-white focus:border-gold focus:outline-none"
@@ -465,11 +493,12 @@ export function AIAssistant() {
                       </div>
 
                       <div>
-                        <label className="block text-[0.68rem] text-cream/75 mb-1 font-medium">Project Brief</label>
+                        <label className="block text-[0.68rem] text-cream/75 mb-1 font-medium">Project Brief / Message *</label>
                         <textarea
+                          required
                           rows={2}
-                          value={leadForm.details}
-                          onChange={(e) => setLeadForm({ ...leadForm, details: e.target.value })}
+                          value={leadForm.message}
+                          onChange={(e) => setLeadForm({ ...leadForm, message: e.target.value })}
                           placeholder="Tell us about your project or goals"
                           className="w-full resize-none rounded-lg border border-cream/20 bg-black/30 px-3 py-1.5 text-xs text-white placeholder:text-cream/40 focus:border-gold focus:outline-none"
                         />
@@ -478,7 +507,7 @@ export function AIAssistant() {
                       <button
                         type="submit"
                         disabled={isSubmitting}
-                        className="mt-2 w-full flex items-center justify-center gap-2 rounded-xl bg-gold py-2.5 text-xs font-semibold text-ink shadow-md transition-all hover:bg-[#e5c158] active:scale-98 disabled:opacity-60 disabled:cursor-not-allowed"
+                        className="mt-2 w-full flex cursor-pointer items-center justify-center gap-2 rounded-xl bg-gold py-2.5 text-xs font-semibold text-ink shadow-md transition-all hover:bg-[#e5c158] active:scale-98 disabled:opacity-60 disabled:cursor-not-allowed"
                       >
                         {isSubmitting ? (
                           <>

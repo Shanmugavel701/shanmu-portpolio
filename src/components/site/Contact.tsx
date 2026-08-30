@@ -20,12 +20,16 @@ export function Contact() {
 
     const fd = new FormData(formRef.current);
     const payload = {
-      name: fd.get("name") as string,
-      email: fd.get("email") as string,
-      phone: fd.get("phone") as string,
-      company: fd.get("company") as string,
-      need: fd.get("need") as string,
-      message: fd.get("message") as string,
+      name: (fd.get("name") as string)?.trim(),
+      email: (fd.get("email") as string)?.trim(),
+      phone: (fd.get("phone") as string)?.trim(),
+      company: (fd.get("company") as string)?.trim() || "—",
+      service: (fd.get("need") as string)?.trim() || "Website",
+      need: (fd.get("need") as string)?.trim() || "Website",
+      message: (fd.get("message") as string)?.trim(),
+      details: (fd.get("message") as string)?.trim(),
+      timestamp: new Date().toLocaleString("en-IN", { timeZone: "Asia/Kolkata" }),
+      source: "Contact Form",
     };
 
     setStatus("sending");
@@ -115,26 +119,28 @@ export function Contact() {
             {/* Phone */}
             <div>
               <label htmlFor="phone" className="label-xs text-muted-foreground">
-                Phone
+                Phone *
               </label>
-              <input id="phone" name="phone" type="tel" className={field} placeholder="+91 98765 43210" />
+              <input id="phone" name="phone" type="tel" required className={field} placeholder="+91 98765 43210" />
             </div>
 
             {/* Company */}
             <div>
               <label htmlFor="company" className="label-xs text-muted-foreground">
-                Company
+                Company (Optional)
               </label>
-              <input id="company" name="company" className={field} placeholder="Optional" />
+              <input id="company" name="company" className={field} placeholder="Company or Brand name" />
             </div>
 
             {/* Service */}
             <div className="sm:col-span-2">
               <label htmlFor="need" className="label-xs text-muted-foreground">
-                What do you need?
+                What do you need? *
               </label>
-              <select id="need" name="need" className={field} defaultValue="Website">
+              <select id="need" name="need" required className={field} defaultValue="Website">
                 <option>Website</option>
+                <option>WordPress Development</option>
+                <option>E-Commerce Store</option>
                 <option>Graphic Design</option>
                 <option>Video Editing</option>
                 <option>Social Media</option>
@@ -145,14 +151,15 @@ export function Contact() {
             {/* Message */}
             <div className="sm:col-span-2">
               <label htmlFor="message" className="label-xs text-muted-foreground">
-                Message
+                Message *
               </label>
               <textarea
                 id="message"
                 name="message"
+                required
                 rows={4}
                 className={`${field} resize-none`}
-                placeholder="Tell me about your project"
+                placeholder="Tell me about your project or requirements"
               />
             </div>
 
@@ -161,7 +168,7 @@ export function Contact() {
               <button
                 type="submit"
                 disabled={status === "sending"}
-                className="label-xs inline-flex w-full items-center justify-center gap-3 bg-primary px-8 py-4 text-primary-foreground transition-colors hover:bg-deep disabled:opacity-60 sm:w-auto"
+                className="label-xs inline-flex w-full cursor-pointer items-center justify-center gap-3 bg-primary px-8 py-4 text-primary-foreground transition-all hover:bg-deep active:scale-98 disabled:opacity-60 disabled:cursor-not-allowed sm:w-auto"
               >
                 {status === "sending" ? (
                   <>
