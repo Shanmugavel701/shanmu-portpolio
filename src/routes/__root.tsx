@@ -148,6 +148,19 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { rel: "canonical", href: "https://www.velzx.com/" },
       { rel: "sitemap", type: "application/xml", href: "/sitemap.xml" },
     ],
+    scripts: [
+      // ── Google Analytics (gtag.js) ────────────────────────────────
+      {
+        src: "https://www.googletagmanager.com/gtag/js?id=G-259KZLYPE1",
+        async: true,
+      },
+      {
+        children: `window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-259KZLYPE1');`,
+      },
+    ],
   }),
   shellComponent: RootShell,
   component: RootComponent,
