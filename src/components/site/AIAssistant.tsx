@@ -144,6 +144,8 @@ export function AIAssistant() {
     details: "",
   });
   const [leadSubmitted, setLeadSubmitted] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState("");
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -203,30 +205,54 @@ export function AIAssistant() {
     }, 700);
   };
 
-  const handleLeadSubmit = (e: React.FormEvent) => {
+  const handleLeadSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!leadForm.name || !leadForm.contactInfo) return;
 
-    setLeadSubmitted(true);
+    setIsSubmitting(true);
+    setSubmitError("");
 
-    const waText = encodeURIComponent(
-      `Hello Shanmu! I submitted a project inquiry via your website AI Assistant.\n\n*Name:* ${leadForm.name}\n*Contact:* ${leadForm.contactInfo}\n*Service:* ${leadForm.service}\n*Details:* ${leadForm.details || "Let's discuss"}`,
-    );
+    try {
+      const webhookUrl = import.meta.env.VITE_SHEETS_WEBHOOK as string;
+      const payload = {
+        name: leadForm.name,
+        contactInfo: leadForm.contactInfo,
+        service: leadForm.service,
+        details: leadForm.details || "Not provided",
+        timestamp: new Date().toLocaleString("en-IN", { timeZone: "Asia/Kolkata" }),
+        source: "AI Chatbot",
+      };
 
-    const botConfirmMsg: Message = {
-      id: Date.now().toString(),
-      sender: "bot",
-      text: `🎉 Thank you, **${leadForm.name}**! Your project details have been received. Shanmu will connect with you shortly.\n\nYou can also click below to open WhatsApp with your details pre-filled for an instant reply!`,
-      timestamp: "Just now",
-      leadCaptured: true,
-      quickReplies: ["💬 Open WhatsApp Chat Now", "🔄 Ask Another Question"],
-    };
+      await fetch(webhookUrl, {
+        method: "POST",
+        mode: "no-cors", // Apps Script requires no-cors
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
 
-    setMessages((prev) => [...prev, botConfirmMsg]);
+      // no-cors means we can't read the response — treat reaching here as success
+      setLeadSubmitted(true);
 
-    // Voice Assistant speech confirmation
-    if (!isMuted) {
-      speakFemaleVoice(`Thank you ${leadForm.name}! Your project details have been received. Shanmu will connect with you shortly.`);
+      const botConfirmMsg: Message = {
+        id: Date.now().toString(),
+        sender: "bot",
+        text: `🎉 Thank you, **${leadForm.name}**! Your project details have been received. Shanmu will connect with you shortly.\n\nYou can also click below to open WhatsApp with your details pre-filled for an instant reply!`,
+        timestamp: "Just now",
+        leadCaptured: true,
+        quickReplies: ["💬 Open WhatsApp Chat Now", "🔄 Ask Another Question"],
+      };
+
+      setMessages((prev) => [...prev, botConfirmMsg]);
+
+      if (!isMuted) {
+        speakFemaleVoice(
+          `Thank you ${leadForm.name}! Your project details have been received. Shanmu will connect with you shortly.`,
+        );
+      }
+    } catch {
+      setSubmitError("Something went wrong. Please try again or contact via WhatsApp.");
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -451,11 +477,29 @@ export function AIAssistant() {
 
                       <button
                         type="submit"
-                        className="mt-2 w-full flex items-center justify-center gap-2 rounded-xl bg-gold py-2.5 text-xs font-semibold text-ink shadow-md transition-all hover:bg-[#e5c158] active:scale-98"
+                        disabled={isSubmitting}
+                        className="mt-2 w-full flex items-center justify-center gap-2 rounded-xl bg-gold py-2.5 text-xs font-semibold text-ink shadow-md transition-all hover:bg-[#e5c158] active:scale-98 disabled:opacity-60 disabled:cursor-not-allowed"
                       >
-                        Submit Project Request <ArrowRight className="h-3.5 w-3.5" />
+                        {isSubmitting ? (
+                          <>
+                            <svg className="h-3.5 w-3.5 animate-spin" viewBox="0 0 24 24" fill="none">
+                              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z" />
+                            </svg>
+                            Sending…
+                          </>
+                        ) : (
+                          <>
+                            Submit Project Request <ArrowRight className="h-3.5 w-3.5" />
+                          </>
+                        )}
                       </button>
+
+                      {submitError && (
+                        <p className="mt-1.5 text-[0.68rem] text-red-400 text-center">{submitError}</p>
+                      )}
                     </form>
+
                   )}
 
                   {/* Quick Action Buttons */}
