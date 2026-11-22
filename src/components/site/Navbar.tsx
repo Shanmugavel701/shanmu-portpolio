@@ -1,11 +1,16 @@
 import { useEffect, useState } from "react";
 import { nav } from "@/data/site";
+import { siteNavigationSchema } from "@/data/seoSchemas";
 
 export function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
+  const [currentPath, setCurrentPath] = useState("");
 
   useEffect(() => {
+    if (typeof window !== "undefined") {
+      setCurrentPath(window.location.pathname);
+    }
     const onScroll = () => setScrolled(window.scrollY > 24);
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
@@ -27,9 +32,15 @@ export function Navbar() {
           : "border-transparent"
       }`}
     >
+      {/* Schema.org SiteNavigationElement for SEO / GEO Menu Structure */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(siteNavigationSchema) }}
+      />
+
       <div className="mx-auto flex h-18 max-w-[1400px] items-center justify-between px-5 py-3 md:px-10">
         {/* Brand Logo - Single Line */}
-        <a href="#top" className="group flex items-center gap-3 shrink-0">
+        <a href="/" className="group flex items-center gap-3 shrink-0">
           <span className="font-display text-xl tracking-wider text-gold md:text-2xl font-medium whitespace-nowrap">
             SHANMU
           </span>
@@ -38,20 +49,31 @@ export function Navbar() {
           </span>
         </a>
 
-        {/* Desktop Nav - Guaranteed Single Line */}
+        {/* Desktop Nav - Guaranteed Single Line with Active Page Indicator */}
         <nav className="hidden items-center gap-5 xl:gap-7 lg:flex shrink-0" aria-label="Primary">
-          {nav.map((item) => (
-            <a
-              key={item.href}
-              href={item.href}
-              className="label-xs text-cream/85 transition-colors hover:text-gold whitespace-nowrap"
-            >
-              {item.label}
-            </a>
-          ))}
+          {nav.map((item) => {
+            const isActive = currentPath === item.href || (item.href !== "/" && currentPath.startsWith(item.href));
+
+            return (
+              <a
+                key={item.href}
+                href={item.href}
+                className={`label-xs tracking-wider transition-all duration-200 whitespace-nowrap relative py-1 ${
+                  isActive
+                    ? "text-gold font-medium"
+                    : "text-cream/85 hover:text-gold"
+                }`}
+              >
+                {item.label}
+                {isActive && (
+                  <span className="absolute bottom-0 left-0 h-0.5 w-full bg-gold rounded-full" />
+                )}
+              </a>
+            );
+          })}
           <a
-            href="#contact"
-            className="label-xs border border-gold px-5 py-2.5 text-gold tracking-widest transition-colors hover:bg-gold hover:text-ink whitespace-nowrap shrink-0"
+            href="/contact"
+            className="label-xs border border-gold px-5 py-2.5 text-gold tracking-widest transition-all duration-300 hover:bg-gold hover:text-ink hover:shadow-md whitespace-nowrap shrink-0"
           >
             Let's Work Together
           </a>
@@ -81,21 +103,26 @@ export function Navbar() {
         }`}
       >
         <nav className="flex flex-col gap-6" aria-label="Mobile">
-          {nav.map((item) => (
-            <a
-              key={item.href}
-              href={item.href}
-              onClick={() => setOpen(false)}
-              className="font-display text-4xl text-cream"
-            >
-              {item.label}
-            </a>
-          ))}
+          {nav.map((item) => {
+            const isActive = currentPath === item.href;
+            return (
+              <a
+                key={item.href}
+                href={item.href}
+                onClick={() => setOpen(false)}
+                className={`font-display text-4xl transition-colors ${
+                  isActive ? "text-gold" : "text-cream hover:text-gold"
+                }`}
+              >
+                {item.label}
+              </a>
+            );
+          })}
         </nav>
         <a
-          href="#contact"
+          href="/contact"
           onClick={() => setOpen(false)}
-          className="label-xs mt-auto block bg-gold px-6 py-4 text-center text-ink"
+          className="label-xs mt-auto block bg-gold px-6 py-4 text-center text-ink font-semibold tracking-wider hover:bg-gold/90 transition-colors"
         >
           Let's Work Together
         </a>

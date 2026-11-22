@@ -33,7 +33,7 @@ export function FAQ() {
               Get direct technical guidance and a clear scope estimate directly from Shanmu.
             </p>
             <a
-              href="#contact"
+              href="/contact"
               className="mt-5 inline-flex items-center gap-2 font-poppins text-xs font-semibold tracking-wider text-gold hover:underline"
             >
               Ask on Contact Form <span aria-hidden="true">→</span>

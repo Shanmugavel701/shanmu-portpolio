@@ -11,6 +11,11 @@ import { useEffect, type ReactNode } from "react";
 
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
+import {
+  personSchema,
+  professionalServiceSchema,
+  siteNavigationSchema,
+} from "../data/seoSchemas";
 
 function NotFoundComponent() {
   return (
@@ -98,6 +103,8 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { name: "language", content: "English" },
       { name: "geo.region", content: "IN-TN" },
       { name: "geo.placename", content: "Coimbatore, Tamil Nadu, India" },
+      { name: "geo.position", content: "11.0168;76.9558" },
+      { name: "ICBM", content: "11.0168, 76.9558" },
 
       // ── Open Graph (SEO + AEO) ─────────────────────────────────────
       { property: "og:site_name", content: "Shanmu" },
@@ -149,6 +156,19 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { rel: "sitemap", type: "application/xml", href: "/sitemap.xml" },
     ],
     scripts: [
+      // ── Global JSON-LD Schema (SEO, GEO & AEO) ──────────────────
+      {
+        type: "application/ld+json",
+        children: JSON.stringify(personSchema),
+      },
+      {
+        type: "application/ld+json",
+        children: JSON.stringify(professionalServiceSchema),
+      },
+      {
+        type: "application/ld+json",
+        children: JSON.stringify(siteNavigationSchema),
+      },
       // ── Google Analytics (gtag.js) ────────────────────────────────
       {
         src: "https://www.googletagmanager.com/gtag/js?id=G-259KZLYPE1",

@@ -7,7 +7,7 @@ export function Footer() {
       <div className="mx-auto grid max-w-[1400px] gap-12 px-5 py-16 md:grid-cols-12 md:px-10 md:py-20">
         {/* Left Column: Brand & Social Media Icons */}
         <div className="md:col-span-4">
-          <a href="#top" className="inline-block group">
+          <a href="/" className="inline-block group">
             <span className="font-display text-3xl text-gold font-medium tracking-wider">
               SHANMU
             </span>
@@ -77,7 +77,7 @@ export function Footer() {
           </div>
           <div className="mt-6">
             <a
-              href="#contact"
+              href="/contact"
               className="inline-flex items-center gap-3 border border-gold bg-gold/10 px-7 py-3.5 label-xs text-gold font-medium tracking-widest transition-all duration-300 hover:bg-gold hover:text-ink hover:shadow-lg"
             >
               Connect with Me
@@ -91,7 +91,13 @@ export function Footer() {
       <div className="border-t border-cream/10">
         <div className="mx-auto flex max-w-[1400px] flex-col gap-2 px-5 py-6 md:flex-row md:items-center md:justify-between md:px-10">
           <p className="label-xs text-cream/45">© 2026 Shanmu. All Rights Reserved.</p>
-          <p className="label-xs text-cream/45">Built with creativity, technology &amp; purpose.</p>
+          <div className="flex items-center gap-4">
+            <a href="/admin/blog" className="label-xs text-cream/45 hover:text-gold transition-colors">
+              Admin Studio
+            </a>
+            <span className="text-cream/20">•</span>
+            <p className="label-xs text-cream/45">Built with creativity, technology &amp; purpose.</p>
+          </div>
         </div>
       </div>
     </footer>

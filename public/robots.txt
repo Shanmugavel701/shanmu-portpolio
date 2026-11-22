@@ -1,9 +1,13 @@
 # ── Traditional Search Crawlers ──────────────────────────
 User-agent: Googlebot
 Allow: /
+Disallow: /admin/
+Disallow: /admin
 
 User-agent: Bingbot
 Allow: /
+Disallow: /admin/
+Disallow: /admin
 
 User-agent: Twitterbot
 Allow: /
@@ -14,34 +18,44 @@ Allow: /
 User-agent: LinkedInBot
 Allow: /
 
-# ── AI / Generative Engine Crawlers (GEO) ────────────────
-# Allow all AI crawlers — optimised for GEO
+# ── AI / Generative Engine Crawlers (GEO & AEO) ──────────
+# Allow all AI crawlers for Answer Engine Optimization
 User-agent: GPTBot
 Allow: /
+Disallow: /admin/
 
 User-agent: ChatGPT-User
 Allow: /
+Disallow: /admin/
 
 User-agent: Google-Extended
 Allow: /
+Disallow: /admin/
 
 User-agent: PerplexityBot
 Allow: /
+Disallow: /admin/
 
 User-agent: ClaudeBot
 Allow: /
+Disallow: /admin/
 
 User-agent: anthropic-ai
 Allow: /
+Disallow: /admin/
 
 User-agent: cohere-ai
 Allow: /
+Disallow: /admin/
 
 User-agent: Applebot-Extended
 Allow: /
+Disallow: /admin/
 
-# ── Default ───────────────────────────────────────────────
+# ── Default Rule ──────────────────────────────────────────
 User-agent: *
 Allow: /
+Disallow: /admin/
+Disallow: /admin
 
-Sitemap: https://www.velzx.com/.xml
+Sitemap: https://www.velzx.com/sitemap.xml

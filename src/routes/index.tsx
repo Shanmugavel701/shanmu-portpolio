@@ -20,6 +20,8 @@ import { Footer } from "@/components/site/Footer";
 import { AIAssistant } from "@/components/site/AIAssistant";
 import { faqs } from "@/data/site";
 
+import { siteNavigationSchema } from "@/data/seoSchemas";
+
 const SITE_URL = "https://shanmugavel.vercel.app";
 const title = "Shanmu | Website Developer & Digital Growth Specialist in India";
 const description =
@@ -187,26 +189,44 @@ const breadcrumbSchema = {
     {
       "@type": "ListItem",
       position: 2,
-      name: "Services",
-      item: `${SITE_URL}#services`,
+      name: "About",
+      item: `${SITE_URL}/about`,
     },
     {
       "@type": "ListItem",
       position: 3,
-      name: "Case Studies",
-      item: `${SITE_URL}#work`,
+      name: "Services",
+      item: `${SITE_URL}/services`,
     },
     {
       "@type": "ListItem",
       position: 4,
-      name: "FAQ",
-      item: `${SITE_URL}#faq`,
+      name: "Work",
+      item: `${SITE_URL}/work`,
     },
     {
       "@type": "ListItem",
       position: 5,
+      name: "Products",
+      item: `${SITE_URL}/products`,
+    },
+    {
+      "@type": "ListItem",
+      position: 6,
+      name: "Blog",
+      item: `${SITE_URL}/blog`,
+    },
+    {
+      "@type": "ListItem",
+      position: 7,
+      name: "FAQ",
+      item: `${SITE_URL}/faq`,
+    },
+    {
+      "@type": "ListItem",
+      position: 8,
       name: "Contact",
-      item: `${SITE_URL}#contact`,
+      item: `${SITE_URL}/contact`,
     },
   ],
 };
@@ -239,6 +259,7 @@ export const Route = createFileRoute("/")({
     ],
     links: [{ rel: "canonical", href: `${SITE_URL}/` }],
     scripts: [
+      { type: "application/ld+json", children: JSON.stringify(siteNavigationSchema) },
       { type: "application/ld+json", children: JSON.stringify(personSchema) },
       { type: "application/ld+json", children: JSON.stringify(serviceSchema) },
       { type: "application/ld+json", children: JSON.stringify(faqSchema) },

@@ -215,7 +215,7 @@ export function AIAssistant() {
     setSubmitError("");
 
     try {
-      const webhookUrl = import.meta.env.VITE_SHEETS_WEBHOOK as string;
+      const webhookUrl = (import.meta.env["VITE_SHEETS_WEBHOOK"] as string) || "";
       const payload = {
         name: leadForm.name.trim(),
         email: leadForm.email.trim(),
