@@ -25,20 +25,28 @@ import {
 
 export function BlogList() {
   const [blogs, setBlogs] = useState<BlogPost[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
 
   useEffect(() => {
     // Immediate render from cache
     const all = getStoredBlogs();
-    setBlogs(all.filter((b) => b.status === "published"));
+    if (all && all.length > 0) {
+      setBlogs(all.filter((b) => b.status === "published"));
+    }
 
     // Fetch dynamic live updates from Supabase
-    fetchBlogsFromSupabase().then((remote) => {
-      if (remote && remote.length > 0) {
-        setBlogs(remote.filter((b) => b.status === "published"));
-      }
-    });
+    fetchBlogsFromSupabase()
+      .then((remote) => {
+        if (remote && remote.length > 0) {
+          setBlogs(remote.filter((b) => b.status === "published"));
+        }
+        setIsLoading(false);
+      })
+      .catch(() => {
+        setIsLoading(false);
+      });
   }, []);
 
   const featuredPost = blogs.find((b) => b.featured) || blogs[0];
@@ -206,7 +214,21 @@ export function BlogList() {
 
         {/* Blog Post Grid */}
         <section className="mx-auto max-w-[1400px] px-5 pt-10 md:px-10">
-          {filteredBlogs.length === 0 ? (
+          {isLoading && blogs.length === 0 ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {[1, 2, 3].map((i) => (
+                <div
+                  key={i}
+                  className="rounded-xl border border-border bg-card p-6 space-y-4 animate-pulse"
+                >
+                  <div className="aspect-[16/10] bg-muted rounded-lg" />
+                  <div className="h-4 bg-muted rounded w-1/3" />
+                  <div className="h-6 bg-muted rounded w-3/4" />
+                  <div className="h-4 bg-muted rounded w-full" />
+                </div>
+              ))}
+            </div>
+          ) : filteredBlogs.length === 0 ? (
             <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-border py-20 text-center">
               <BookOpen className="h-12 w-12 text-muted-foreground/40 mb-3" />
               <h3 className="font-display text-2xl font-medium text-foreground">

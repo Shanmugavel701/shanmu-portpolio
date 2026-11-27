@@ -29,13 +29,19 @@ interface BlogPostDetailProps {
 
 export function BlogPostDetail({ slug }: BlogPostDetailProps) {
   const [post, setPost] = useState<BlogPost | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
   const [relatedPosts, setRelatedPosts] = useState<BlogPost[]>([]);
   const [copied, setCopied] = useState(false);
   const [scrollProgress, setScrollProgress] = useState(0);
 
   useEffect(() => {
+    let isMounted = true;
+    setIsLoading(true);
+
     const handleLoad = (article: BlogPost) => {
+      if (!isMounted) return;
       setPost(article);
+      setIsLoading(false);
       incrementBlogViews(article.id);
       const all = getStoredBlogs().filter(
         (b) => b.id !== article.id && b.status === "published"
@@ -46,15 +52,28 @@ export function BlogPostDetail({ slug }: BlogPostDetailProps) {
     const found = getBlogBySlug(slug);
     if (found) {
       handleLoad(found);
-    } else {
-      // If not in cache, query Supabase
-      fetchBlogsFromSupabase().then((remote) => {
+    }
+
+    // Always fetch latest dynamic version from Supabase
+    fetchBlogsFromSupabase()
+      .then((remote) => {
+        if (!isMounted) return;
         const remoteFound = remote.find((b) => b.slug === slug || b.id === slug);
         if (remoteFound) {
           handleLoad(remoteFound);
+        } else if (!found) {
+          setIsLoading(false);
+        }
+      })
+      .catch(() => {
+        if (isMounted && !found) {
+          setIsLoading(false);
         }
       });
-    }
+
+    return () => {
+      isMounted = false;
+    };
   }, [slug]);
 
   useEffect(() => {
@@ -96,6 +115,22 @@ export function BlogPostDetail({ slug }: BlogPostDetailProps) {
     const text = encodeURIComponent(`"${post.title}" - ${url}`);
     window.open(`https://api.whatsapp.com/send?text=${text}`, "_blank");
   };
+
+  if (isLoading && !post) {
+    return (
+      <div className="min-h-screen bg-background text-foreground font-sans">
+        <Navbar />
+        <div className="flex flex-col items-center justify-center pt-40 pb-20 px-4 text-center">
+          <Sparkles className="h-10 w-10 text-gold animate-spin mb-4" />
+          <h2 className="font-display text-2xl font-semibold">Loading Article...</h2>
+          <p className="mt-2 text-sm text-muted-foreground max-w-md">
+            Retrieving publication from live database...
+          </p>
+        </div>
+        <Footer />
+      </div>
+    );
+  }
 
   if (!post) {
     return (

@@ -23,6 +23,13 @@ export interface BlogPost {
   seoDescription: string;
 }
 
+export interface SaveBlogResult {
+  post: BlogPost;
+  success: boolean;
+  syncedToCloud: boolean;
+  error?: string;
+}
+
 export const BLOG_CATEGORIES = [
   "Web Development",
   "WordPress & WooCommerce",
@@ -306,15 +313,53 @@ export function saveStoredBlogs(blogs: BlogPost[]): void {
 }
 
 /**
+ * Verifies live connection to Supabase and checks if the blogs table exists
+ */
+export async function checkSupabaseConnection(): Promise<{
+  connected: boolean;
+  tableExists: boolean;
+  count: number;
+  error?: string;
+}> {
+  try {
+    const { count, error } = await supabase
+      .from("blogs")
+      .select("*", { count: "exact", head: true });
+
+    if (error) {
+      return {
+        connected: false,
+        tableExists: false,
+        count: 0,
+        error: error.message,
+      };
+    }
+
+    return {
+      connected: true,
+      tableExists: true,
+      count: count ?? 0,
+    };
+  } catch (err: any) {
+    return {
+      connected: false,
+      tableExists: false,
+      count: 0,
+      error: err?.message || "Connection failed",
+    };
+  }
+}
+
+/**
  * Dynamically fetches all blogs from Supabase Database
- * Updates localStorage cache in background
+ * Updates localStorage cache in background while preserving any unsynced local drafts
  */
 export async function fetchBlogsFromSupabase(): Promise<BlogPost[]> {
   try {
     const { data, error } = await supabase
       .from("blogs")
       .select("*")
-      .order("created_at", { ascending: false });
+      .order("published_at", { ascending: false });
 
     if (error) {
       // If table does not exist or network is offline, return cached
@@ -324,8 +369,15 @@ export async function fetchBlogsFromSupabase(): Promise<BlogPost[]> {
 
     if (data && data.length > 0) {
       const remoteBlogs = data.map(mapRowToBlogPost);
-      saveStoredBlogs(remoteBlogs);
-      return remoteBlogs;
+      
+      // Merge remote blogs with local blogs so any pending admin posts are preserved
+      const localBlogs = getStoredBlogs();
+      const remoteIds = new Set(remoteBlogs.map((b) => b.id));
+      const unsynced = localBlogs.filter((b) => !remoteIds.has(b.id));
+
+      const merged = [...remoteBlogs, ...unsynced];
+      saveStoredBlogs(merged);
+      return merged;
     }
 
     return getStoredBlogs();
@@ -348,7 +400,9 @@ export function getBlogById(id: string): BlogPost | undefined {
 /**
  * Creates or updates a blog post dynamically both in Supabase and local cache
  */
-export async function saveOrUpdateBlogPost(post: Partial<BlogPost> & { title: string }): Promise<BlogPost> {
+export async function saveOrUpdateBlogPost(
+  post: Partial<BlogPost> & { title: string }
+): Promise<SaveBlogResult> {
   const blogs = getStoredBlogs();
   const slug =
     post.slug?.trim() ||
@@ -417,17 +471,29 @@ export async function saveOrUpdateBlogPost(post: Partial<BlogPost> & { title: st
   saveStoredBlogs(blogs);
 
   // Sync dynamically to Supabase in background
+  let syncedToCloud = false;
+  let supabaseError: string | undefined = undefined;
+
   try {
     const row = mapBlogPostToRow(targetPost);
     const { error } = await supabase.from("blogs").upsert(row);
     if (error) {
       console.warn("Supabase upsert warning:", error.message);
+      supabaseError = error.message;
+    } else {
+      syncedToCloud = true;
     }
-  } catch (err) {
+  } catch (err: any) {
     console.warn("Could not upsert to Supabase:", err);
+    supabaseError = err?.message || "Failed to reach Supabase database.";
   }
 
-  return targetPost;
+  return {
+    post: targetPost,
+    success: true,
+    syncedToCloud,
+    error: supabaseError,
+  };
 }
 
 /**

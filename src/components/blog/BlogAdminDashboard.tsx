@@ -10,6 +10,7 @@ import {
   toggleBlogPublishStatus,
   toggleBlogFeatured,
   syncLocalBlogsToSupabase,
+  checkSupabaseConnection,
 } from "@/lib/blogStorage";
 import { isAdminAuthenticated, adminLogout } from "@/lib/adminAuth";
 import { AdminLogin } from "@/components/blog/AdminLogin";
@@ -42,6 +43,9 @@ import {
   Sliders,
   Check,
   Calendar,
+  AlertTriangle,
+  Database,
+  Code,
 } from "lucide-react";
 
 const COVER_PRESETS = [
@@ -79,6 +83,22 @@ export function BlogAdminDashboard() {
   const [statusFilter, setStatusFilter] = useState<"all" | "published" | "draft">("all");
   const [notification, setNotification] = useState<string | null>(null);
 
+  // Cloud Database Status
+  const [dbStatus, setDbStatus] = useState<{
+    checked: boolean;
+    connected: boolean;
+    count: number;
+    error?: string;
+  }>({
+    checked: false,
+    connected: false,
+    count: 0,
+  });
+  const [isCheckingDb, setIsCheckingDb] = useState(false);
+  const [isSyncingDb, setIsSyncingDb] = useState(false);
+  const [isSqlModalOpen, setIsSqlModalOpen] = useState(false);
+  const [sqlCopied, setSqlCopied] = useState(false);
+
   // Editor Modal State
   const [isEditorOpen, setIsEditorOpen] = useState(false);
   const [editingPost, setEditingPost] = useState<BlogPost | null>(null);
@@ -89,9 +109,23 @@ export function BlogAdminDashboard() {
   // Delete confirmation
   const [deleteConfirmId, setDeleteConfirmId] = useState<string | null>(null);
 
+  const verifyDatabase = async () => {
+    setIsCheckingDb(true);
+    const status = await checkSupabaseConnection();
+    setDbStatus({
+      checked: true,
+      connected: status.tableExists,
+      count: status.count,
+      error: status.error,
+    });
+    setIsCheckingDb(false);
+    return status;
+  };
+
   useEffect(() => {
     setAuthenticated(isAdminAuthenticated());
     setBlogs(getStoredBlogs());
+    verifyDatabase();
 
     // Dynamically fetch from Supabase in background
     fetchBlogsFromSupabase().then((remoteBlogs) => {
@@ -190,21 +224,83 @@ export function BlogAdminDashboard() {
     setIsEditorOpen(true);
   };
 
+  const SQL_SETUP_SCRIPT = `-- 1. Create the blogs table
+create table if not exists public.blogs (
+  id text primary key,
+  title text not null,
+  slug text unique not null,
+  excerpt text default '',
+  content text default '',
+  cover_image text default '',
+  category text default 'Web Development',
+  tags text[] default '{}',
+  author jsonb default '{"name":"Shanmugavel","role":"Website Developer & Growth Specialist","avatar":"https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80"}'::jsonb,
+  published_at text default '',
+  read_time text default '5 min read',
+  status text default 'published',
+  views integer default 0,
+  featured boolean default false,
+  seo_title text default '',
+  seo_description text default '',
+  created_at timestamptz default timezone('utc'::text, now()),
+  updated_at timestamptz default timezone('utc'::text, now())
+);
+
+-- 2. Performance indexes
+create index if not exists idx_blogs_slug on public.blogs (slug);
+create index if not exists idx_blogs_status on public.blogs (status);
+create index if not exists idx_blogs_category on public.blogs (category);
+create index if not exists idx_blogs_published_at on public.blogs (published_at desc);
+
+-- 3. Enable RLS
+alter table public.blogs enable row level security;
+
+-- 4. Clean previous policies
+drop policy if exists "Allow public read access" on public.blogs;
+drop policy if exists "Allow full public and admin access" on public.blogs;
+
+-- 5. Read Policy: Normal visitors & Incognito mode can view
+create policy "Allow public read access" on public.blogs for select using (true);
+
+-- 6. Write Policy: Admin dashboard can save & edit posts
+create policy "Allow full public and admin access" on public.blogs for all using (true) with check (true);
+
+-- 7. Grant permissions
+grant all on public.blogs to anon;
+grant all on public.blogs to authenticated;
+grant all on public.blogs to service_role;`;
+
+  const handleCopySql = () => {
+    if (typeof window !== "undefined") {
+      navigator.clipboard.writeText(SQL_SETUP_SCRIPT);
+      setSqlCopied(true);
+      showToast("SQL script copied! Paste it into Supabase SQL Editor and click RUN.");
+      setTimeout(() => setSqlCopied(false), 3000);
+    }
+  };
+
   const handleSavePost = async () => {
     if (!editingPost || !editingPost.title?.trim()) {
       showToast("Please enter a blog post title");
       return;
     }
 
-    const saved = await saveOrUpdateBlogPost(editingPost);
+    const res = await saveOrUpdateBlogPost(editingPost);
     await loadBlogs();
+    await verifyDatabase();
     setIsEditorOpen(false);
-    showToast(`Post "${saved.title.slice(0, 25)}..." saved dynamically!`);
+
+    if (res.syncedToCloud) {
+      showToast(`✅ "${res.post.title.slice(0, 25)}..." published live! Visible to all users & Incognito.`);
+    } else {
+      showToast(`⚠️ Saved locally: Cloud database table is missing. Click "View 1-Minute SQL Fix" to activate.`);
+    }
   };
 
   const handleDeletePost = async (id: string) => {
     await deleteBlogPost(id);
     await loadBlogs();
+    await verifyDatabase();
     setDeleteConfirmId(null);
     showToast("Post deleted successfully");
   };
@@ -242,13 +338,16 @@ export function BlogAdminDashboard() {
   };
 
   const handleSyncDatabase = async () => {
-    showToast("Syncing database articles...");
+    setIsSyncingDb(true);
+    showToast("Connecting and synchronizing database articles...");
     const res = await syncLocalBlogsToSupabase();
+    await verifyDatabase();
     await loadBlogs();
+    setIsSyncingDb(false);
     if (res.success) {
-      showToast(`Database synchronized: ${res.count} articles updated!`);
+      showToast(`✅ Database synchronized: ${res.count} articles live in cloud for all visitors!`);
     } else {
-      showToast(res.error || "Database synchronization complete.");
+      showToast(`⚠️ Sync notice: ${res.error || "Please run SQL setup in Supabase first."}`);
     }
   };
 
@@ -470,6 +569,77 @@ export function BlogAdminDashboard() {
           {/* Tab 2: Blog Posts Manager */}
           {currentTab === "posts" && (
             <div className="space-y-6">
+              {/* Cloud Database Connection Alert Banner */}
+              {dbStatus.checked && !dbStatus.connected && (
+                <div className="rounded-2xl border-2 border-amber-300 bg-amber-50/95 p-5 shadow-sm animate-in fade-in-50">
+                  <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4">
+                    <div className="flex items-start gap-3.5">
+                      <div className="rounded-xl bg-amber-200/80 p-2.5 text-amber-900 mt-0.5 shrink-0">
+                        <AlertTriangle className="h-5 w-5" />
+                      </div>
+                      <div>
+                        <div className="flex items-center gap-2 flex-wrap">
+                          <h3 className="text-sm font-bold text-amber-950">
+                            Cloud Database Not Activated — Posts Visible Only In This Browser
+                          </h3>
+                          <span className="rounded-full bg-amber-200 border border-amber-300 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-amber-900">
+                            Action Required
+                          </span>
+                        </div>
+                        <p className="mt-1 text-xs text-amber-900/80 leading-relaxed max-w-2xl">
+                          Your blog articles are currently stored only in this browser's local cache.{" "}
+                          <strong>Normal website visitors and Incognito mode cannot view your blog posts</strong> until the Supabase database <code className="bg-amber-200/70 px-1.5 py-0.5 rounded font-mono font-bold text-amber-950">blogs</code> table is created.
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="flex flex-wrap items-center gap-2.5 w-full lg:w-auto shrink-0">
+                      <button
+                        type="button"
+                        onClick={() => setIsSqlModalOpen(true)}
+                        className="rounded-xl bg-slate-900 px-4 py-2.5 text-xs font-bold text-white shadow-md hover:bg-slate-800 transition-all flex items-center gap-2 cursor-pointer"
+                      >
+                        <Code className="h-3.5 w-3.5 text-amber-400" />
+                        <span>View 1-Minute SQL Fix</span>
+                      </button>
+                      <button
+                        type="button"
+                        onClick={handleSyncDatabase}
+                        disabled={isSyncingDb}
+                        className="rounded-xl border border-amber-300 bg-white px-3.5 py-2.5 text-xs font-bold text-amber-900 hover:bg-amber-100 transition-colors flex items-center gap-1.5 cursor-pointer disabled:opacity-60"
+                      >
+                        <RefreshCw className={`h-3.5 w-3.5 ${isSyncingDb ? "animate-spin" : ""}`} />
+                        <span>Check & Sync Now</span>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Cloud Database Connected Banner */}
+              {dbStatus.checked && dbStatus.connected && (
+                <div className="rounded-2xl border border-emerald-200 bg-emerald-50/70 p-3.5 px-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs text-emerald-900 shadow-xs">
+                  <div className="flex items-center gap-2.5">
+                    <CheckCircle2 className="h-4 w-4 text-emerald-600 shrink-0" />
+                    <div>
+                      <span className="font-bold">Cloud Database Active: </span>
+                      <span>
+                        Articles sync live to Supabase. All normal visitors and Incognito mode can view your blogs ({dbStatus.count} articles live in cloud).
+                      </span>
+                    </div>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={handleSyncDatabase}
+                    disabled={isSyncingDb}
+                    className="inline-flex items-center gap-1.5 text-xs font-bold text-emerald-700 hover:text-emerald-900 hover:underline shrink-0 cursor-pointer disabled:opacity-60"
+                  >
+                    <RefreshCw className={`h-3.5 w-3.5 ${isSyncingDb ? "animate-spin" : ""}`} />
+                    <span>Sync Local to Cloud</span>
+                  </button>
+                </div>
+              )}
+
               {/* Quick Stat Pill Bar */}
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
                 <div className="rounded-xl border border-slate-200 bg-white p-4">
@@ -1534,6 +1704,143 @@ export function BlogAdminDashboard() {
                 />
               </div>
             )}
+          </div>
+        </div>
+      )}
+
+      {/* 1-Minute SQL Fix Setup Modal */}
+      {isSqlModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-xs animate-in fade-in-50">
+          <div className="relative w-full max-w-3xl rounded-3xl border border-slate-200 bg-white p-6 sm:p-8 shadow-2xl max-h-[90vh] flex flex-col">
+            {/* Header */}
+            <div className="flex items-start justify-between pb-4 border-b border-slate-100">
+              <div className="flex items-center gap-3">
+                <div className="rounded-xl bg-amber-100 p-2 text-amber-800">
+                  <Database className="h-6 w-6" />
+                </div>
+                <div>
+                  <h2 className="text-lg font-bold text-slate-900 font-display">
+                    Activate Cloud Database (1-Minute Fix)
+                  </h2>
+                  <p className="text-xs text-slate-500 mt-0.5">
+                    Create the <code className="font-mono text-emerald-700 bg-emerald-50 px-1 py-0.5 rounded">blogs</code> table so your articles load for normal users and Incognito mode.
+                  </p>
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={() => setIsSqlModalOpen(false)}
+                className="rounded-lg p-1.5 text-slate-400 hover:text-slate-600 hover:bg-slate-100 cursor-pointer"
+              >
+                <X className="h-5 w-5" />
+              </button>
+            </div>
+
+            {/* Steps & Content */}
+            <div className="flex-1 overflow-y-auto py-5 space-y-5 scrollbar-thin">
+              {/* 3 Step Guide */}
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                <div className="rounded-xl border border-slate-200 bg-slate-50 p-3.5 space-y-1">
+                  <div className="flex items-center gap-2">
+                    <span className="flex h-5 w-5 items-center justify-center rounded-full bg-emerald-600 text-[10px] font-bold text-white">1</span>
+                    <span className="text-xs font-bold text-slate-800">Copy Script</span>
+                  </div>
+                  <p className="text-[11px] text-slate-500 leading-relaxed">
+                    Click the "Copy SQL Code" button below to copy the complete schema.
+                  </p>
+                </div>
+
+                <div className="rounded-xl border border-slate-200 bg-slate-50 p-3.5 space-y-1">
+                  <div className="flex items-center gap-2">
+                    <span className="flex h-5 w-5 items-center justify-center rounded-full bg-emerald-600 text-[10px] font-bold text-white">2</span>
+                    <span className="text-xs font-bold text-slate-800">Paste in Supabase</span>
+                  </div>
+                  <p className="text-[11px] text-slate-500 leading-relaxed">
+                    Open Supabase SQL Editor, paste this code, and click <strong>RUN</strong>.
+                  </p>
+                </div>
+
+                <div className="rounded-xl border border-slate-200 bg-slate-50 p-3.5 space-y-1">
+                  <div className="flex items-center gap-2">
+                    <span className="flex h-5 w-5 items-center justify-center rounded-full bg-emerald-600 text-[10px] font-bold text-white">3</span>
+                    <span className="text-xs font-bold text-slate-800">Sync Articles</span>
+                  </div>
+                  <p className="text-[11px] text-slate-500 leading-relaxed">
+                    Click "Test & Sync Now". All your created posts go live immediately!
+                  </p>
+                </div>
+              </div>
+
+              {/* Action Buttons */}
+              <div className="flex flex-wrap items-center gap-3">
+                <a
+                  href="https://supabase.com/dashboard/project/vbvcqjcpdngfhvbvecfh/sql/new"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="rounded-xl bg-emerald-600 px-4 py-2.5 text-xs font-bold text-white hover:bg-emerald-700 transition-colors flex items-center gap-1.5 shadow-sm"
+                >
+                  <ExternalLink className="h-4 w-4" />
+                  <span>Open Supabase SQL Editor ↗</span>
+                </a>
+
+                <button
+                  type="button"
+                  onClick={handleCopySql}
+                  className="rounded-xl bg-slate-900 px-4 py-2.5 text-xs font-bold text-white hover:bg-slate-800 transition-colors flex items-center gap-1.5 shadow-sm cursor-pointer"
+                >
+                  {sqlCopied ? <Check className="h-4 w-4 text-emerald-400" /> : <Copy className="h-4 w-4" />}
+                  <span>{sqlCopied ? "Copied to Clipboard!" : "Copy SQL Code"}</span>
+                </button>
+              </div>
+
+              {/* SQL Code Box */}
+              <div>
+                <div className="flex items-center justify-between pb-1.5">
+                  <span className="text-[11px] font-bold uppercase tracking-wider text-slate-500">
+                    SQL Script (<code className="font-mono text-slate-700">supabase_schema.sql</code>)
+                  </span>
+                </div>
+                <div className="relative">
+                  <pre className="max-h-56 overflow-auto rounded-xl border border-slate-200 bg-slate-900 p-4 font-mono text-[11px] text-emerald-300 leading-relaxed select-all">
+                    {SQL_SETUP_SCRIPT}
+                  </pre>
+                </div>
+              </div>
+            </div>
+
+            {/* Footer */}
+            <div className="pt-4 border-t border-slate-100 flex flex-wrap items-center justify-between gap-3">
+              <span className="text-xs text-slate-500">
+                Project: <code className="font-mono text-slate-700">vbvcqjcpdngfhvbvecfh.supabase.co</code>
+              </span>
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={() => setIsSqlModalOpen(false)}
+                  className="rounded-xl border border-slate-200 px-4 py-2 text-xs font-semibold text-slate-600 hover:bg-slate-50 cursor-pointer"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="button"
+                  onClick={async () => {
+                    const status = await verifyDatabase();
+                    if (status.tableExists) {
+                      await handleSyncDatabase();
+                      setIsSqlModalOpen(false);
+                      showToast("🎉 Database connected and all articles synced live!");
+                    } else {
+                      showToast("Table not detected yet. Make sure you clicked RUN in Supabase SQL editor!");
+                    }
+                  }}
+                  disabled={isCheckingDb}
+                  className="rounded-xl bg-emerald-600 px-4 py-2 text-xs font-bold text-white hover:bg-emerald-700 transition-colors flex items-center gap-1.5 cursor-pointer disabled:opacity-60"
+                >
+                  <RefreshCw className={`h-3.5 w-3.5 ${isCheckingDb ? "animate-spin" : ""}`} />
+                  <span>Test Connection &amp; Sync</span>
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       )}
