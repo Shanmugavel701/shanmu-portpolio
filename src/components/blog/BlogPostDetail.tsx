@@ -294,9 +294,9 @@ export function BlogPostDetail({ slug }: BlogPostDetailProps) {
                 </div>
               </div>
 
-              {/* Prose HTML Output from TipTap */}
+              {/* Editorial HTML Output from TipTap */}
               <div
-                className="prose max-w-none prose-neutral dark:prose-invert prose-headings:font-display prose-headings:text-foreground prose-h2:text-2xl sm:prose-h2:text-3xl prose-h2:mt-10 prose-h2:mb-4 prose-h3:text-xl prose-h3:mt-8 prose-p:text-foreground/85 prose-p:leading-relaxed prose-p:text-base sm:prose-p:text-lg prose-blockquote:border-l-4 prose-blockquote:border-gold prose-blockquote:pl-5 prose-blockquote:italic prose-blockquote:text-foreground/90 prose-ul:list-disc prose-ol:list-decimal prose-li:my-1.5 prose-li:text-foreground/85 prose-code:bg-muted prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded prose-code:text-primary prose-pre:bg-deep prose-pre:text-cream prose-img:rounded-xl prose-img:shadow-lg prose-a:text-primary prose-a:underline hover:prose-a:text-gold"
+                className="blog-content prose max-w-none text-foreground font-sans"
                 dangerouslySetInnerHTML={{ __html: post.content }}
               />
 

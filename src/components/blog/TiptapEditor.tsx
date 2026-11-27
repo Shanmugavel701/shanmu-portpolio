@@ -4,6 +4,7 @@ import Link from "@tiptap/extension-link";
 import Image from "@tiptap/extension-image";
 import Placeholder from "@tiptap/extension-placeholder";
 import Underline from "@tiptap/extension-underline";
+import TextAlign from "@tiptap/extension-text-align";
 import { useEffect, useState, useRef } from "react";
 import {
   Bold,
@@ -14,6 +15,14 @@ import {
   Heading1,
   Heading2,
   Heading3,
+  Heading4,
+  Heading5,
+  Heading6,
+  Pilcrow,
+  AlignLeft,
+  AlignCenter,
+  AlignRight,
+  AlignJustify,
   List,
   ListOrdered,
   Quote,
@@ -60,8 +69,11 @@ export function TiptapEditor({
     extensions: [
       StarterKit.configure({
         heading: {
-          levels: [1, 2, 3],
+          levels: [1, 2, 3, 4, 5, 6],
         },
+      }),
+      TextAlign.configure({
+        types: ["heading", "paragraph"],
       }),
       Underline,
       Link.configure({
@@ -82,10 +94,10 @@ export function TiptapEditor({
     content,
     editorProps: {
       attributes: {
-        class: `focus:outline-none min-h-[${minHeight}] px-6 py-5 ${
+        class: `focus:outline-none min-h-[${minHeight}] px-6 py-5 blog-content prose max-w-none ${
           isLight
-            ? "text-slate-800 font-sans leading-relaxed text-base prose prose-slate max-w-none prose-headings:font-display prose-headings:text-slate-900 prose-headings:font-bold prose-h1:text-3xl prose-h2:text-2xl prose-h3:text-xl prose-p:mb-4 prose-p:leading-relaxed prose-blockquote:border-l-4 prose-blockquote:border-emerald-600 prose-blockquote:bg-emerald-50/50 prose-blockquote:p-4 prose-blockquote:rounded-r-lg prose-blockquote:italic prose-blockquote:text-slate-700 prose-ul:list-disc prose-ol:list-decimal prose-li:my-1 prose-code:bg-slate-100 prose-code:text-emerald-700 prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded prose-code:font-mono prose-pre:bg-slate-900 prose-pre:text-slate-100 prose-pre:p-4 prose-pre:rounded-xl"
-            : "text-cream/90 font-sans leading-relaxed text-base prose-invert max-w-none prose-headings:font-display prose-headings:text-cream prose-h1:text-3xl prose-h2:text-2xl prose-h3:text-xl prose-p:mb-4 prose-blockquote:border-l-2 prose-blockquote:border-gold prose-blockquote:pl-4 prose-blockquote:italic prose-blockquote:text-gold/90 prose-ul:list-disc prose-ol:list-decimal prose-li:my-1 prose-code:bg-white/10 prose-code:text-gold prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded prose-pre:bg-black/50 prose-pre:p-4 prose-pre:rounded-lg"
+            ? "text-slate-800 font-sans"
+            : "text-cream/90 font-sans"
         }`,
       },
     },
@@ -181,8 +193,24 @@ export function TiptapEditor({
             : "border-white/10 bg-[#0f1b15]/95 text-cream"
         }`}
       >
-        {/* Headings */}
+        {/* Headings & Paragraph */}
         <div className="flex items-center gap-0.5 border-r border-slate-200 pr-1.5">
+          <button
+            type="button"
+            title="Paragraph"
+            onClick={() => editor.chain().focus().setParagraph().run()}
+            className={`flex h-8 w-8 items-center justify-center rounded-lg transition-all cursor-pointer ${
+              editor.isActive("paragraph")
+                ? isLight
+                  ? "bg-slate-900 text-white font-bold shadow-xs"
+                  : "bg-gold text-ink font-bold"
+                : isLight
+                ? "text-slate-600 hover:bg-slate-200/70 hover:text-slate-900"
+                : "text-cream/80 hover:bg-white/10 hover:text-gold"
+            }`}
+          >
+            <Pilcrow className="h-4 w-4" />
+          </button>
           <button
             type="button"
             title="Heading 1"
@@ -230,6 +258,122 @@ export function TiptapEditor({
             }`}
           >
             <Heading3 className="h-4 w-4" />
+          </button>
+          <button
+            type="button"
+            title="Heading 4"
+            onClick={() => editor.chain().focus().toggleHeading({ level: 4 }).run()}
+            className={`flex h-8 w-8 items-center justify-center rounded-lg transition-all cursor-pointer ${
+              editor.isActive("heading", { level: 4 })
+                ? isLight
+                  ? "bg-slate-900 text-white font-bold shadow-xs"
+                  : "bg-gold text-ink font-bold"
+                : isLight
+                ? "text-slate-600 hover:bg-slate-200/70 hover:text-slate-900"
+                : "text-cream/80 hover:bg-white/10 hover:text-gold"
+            }`}
+          >
+            <Heading4 className="h-4 w-4" />
+          </button>
+          <button
+            type="button"
+            title="Heading 5"
+            onClick={() => editor.chain().focus().toggleHeading({ level: 5 }).run()}
+            className={`flex h-8 w-8 items-center justify-center rounded-lg transition-all cursor-pointer ${
+              editor.isActive("heading", { level: 5 })
+                ? isLight
+                  ? "bg-slate-900 text-white font-bold shadow-xs"
+                  : "bg-gold text-ink font-bold"
+                : isLight
+                ? "text-slate-600 hover:bg-slate-200/70 hover:text-slate-900"
+                : "text-cream/80 hover:bg-white/10 hover:text-gold"
+            }`}
+          >
+            <Heading5 className="h-4 w-4" />
+          </button>
+          <button
+            type="button"
+            title="Heading 6"
+            onClick={() => editor.chain().focus().toggleHeading({ level: 6 }).run()}
+            className={`flex h-8 w-8 items-center justify-center rounded-lg transition-all cursor-pointer ${
+              editor.isActive("heading", { level: 6 })
+                ? isLight
+                  ? "bg-slate-900 text-white font-bold shadow-xs"
+                  : "bg-gold text-ink font-bold"
+                : isLight
+                ? "text-slate-600 hover:bg-slate-200/70 hover:text-slate-900"
+                : "text-cream/80 hover:bg-white/10 hover:text-gold"
+            }`}
+          >
+            <Heading6 className="h-4 w-4" />
+          </button>
+        </div>
+
+        {/* Alignment */}
+        <div className="flex items-center gap-0.5 border-r border-slate-200 px-1.5">
+          <button
+            type="button"
+            title="Align Left"
+            onClick={() => editor.chain().focus().setTextAlign("left").run()}
+            className={`flex h-8 w-8 items-center justify-center rounded-lg transition-all cursor-pointer ${
+              editor.isActive({ textAlign: "left" })
+                ? isLight
+                  ? "bg-slate-900 text-white font-bold shadow-xs"
+                  : "bg-gold text-ink font-bold"
+                : isLight
+                ? "text-slate-600 hover:bg-slate-200/70 hover:text-slate-900"
+                : "text-cream/80 hover:bg-white/10 hover:text-gold"
+            }`}
+          >
+            <AlignLeft className="h-4 w-4" />
+          </button>
+          <button
+            type="button"
+            title="Align Center"
+            onClick={() => editor.chain().focus().setTextAlign("center").run()}
+            className={`flex h-8 w-8 items-center justify-center rounded-lg transition-all cursor-pointer ${
+              editor.isActive({ textAlign: "center" })
+                ? isLight
+                  ? "bg-slate-900 text-white font-bold shadow-xs"
+                  : "bg-gold text-ink font-bold"
+                : isLight
+                ? "text-slate-600 hover:bg-slate-200/70 hover:text-slate-900"
+                : "text-cream/80 hover:bg-white/10 hover:text-gold"
+            }`}
+          >
+            <AlignCenter className="h-4 w-4" />
+          </button>
+          <button
+            type="button"
+            title="Align Right"
+            onClick={() => editor.chain().focus().setTextAlign("right").run()}
+            className={`flex h-8 w-8 items-center justify-center rounded-lg transition-all cursor-pointer ${
+              editor.isActive({ textAlign: "right" })
+                ? isLight
+                  ? "bg-slate-900 text-white font-bold shadow-xs"
+                  : "bg-gold text-ink font-bold"
+                : isLight
+                ? "text-slate-600 hover:bg-slate-200/70 hover:text-slate-900"
+                : "text-cream/80 hover:bg-white/10 hover:text-gold"
+            }`}
+          >
+            <AlignRight className="h-4 w-4" />
+          </button>
+          <button
+            type="button"
+            title="Justify"
+            onClick={() => editor.chain().focus().setTextAlign("justify").run()}
+            className={`flex h-8 w-8 items-center justify-center rounded-lg transition-all cursor-pointer ${
+              editor.isActive({ textAlign: "justify" })
+                ? isLight
+                  ? "bg-slate-900 text-white font-bold shadow-xs"
+                  : "bg-gold text-ink font-bold"
+                : isLight
+                ? "text-slate-600 hover:bg-slate-200/70 hover:text-slate-900"
+                : "text-cream/80 hover:bg-white/10 hover:text-gold"
+            }`}
+          >
+            <AlignJustify className="h-4 w-4" />
           </button>
         </div>
 

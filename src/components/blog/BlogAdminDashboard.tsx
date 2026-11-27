@@ -1697,7 +1697,7 @@ grant all on public.blogs to service_role;`;
                 )}
 
                 <div
-                  className="prose prose-slate max-w-none prose-headings:font-display prose-headings:text-slate-900 prose-p:text-slate-700 prose-blockquote:border-emerald-600 prose-blockquote:bg-emerald-50 prose-blockquote:p-4 prose-blockquote:rounded-r-lg"
+                  className="blog-content prose max-w-none text-slate-800 font-sans"
                   dangerouslySetInnerHTML={{
                     __html: editingPost.content || "<p>No content written yet.</p>",
                   }}
